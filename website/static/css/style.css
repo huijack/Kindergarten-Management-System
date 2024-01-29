@@ -70,6 +70,76 @@ body {
 }
 
 .menu-list-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-link {
+    display: block;
+    padding: 10px;
+    background: none;
+    border: none;
+    width: 100%;
+    transition: 0.3s;
+    color: #fff; 
+}
+
+
+.menu-link {
+    display: block;
+    padding: 10px;
+    background: none;
+    border: none;
+    width: 100%;
+    transition: 0.3s;
+    color: #fff; /* Set default text color for menu links */
+}
+
+.menu-link:hover,
+.menu-link--active {
+    background-color: #74BCF1;
+    color: #000000;
+}
+
+
+.menu-list-styling--active {
+    color: #000000 !important;
+}
+
+
+
+
+.menu-list-styling {
+    display: flex;
+    align-items: center;
+    padding: 4% 8%;
+    font-size: 20px;
+}
+
+
+.menu-list-styling h6 {
+    margin-bottom: 0;
+
+}
+
+.list-icon {
+    width: 20%;
+    text-align: center;
+}
+
+.list-text {
+    width: auto;
+    font-weight: 700;
+}
+
+.content-container {
+    display: none;
+}
+
+.content-container--active {
+    display: block;
 }

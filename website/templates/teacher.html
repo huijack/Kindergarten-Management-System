@@ -23,8 +23,6 @@
 </head>
 <body>    
     <div class="body-container">
-
-        aaa
         <!-- Dashboard -->
         <div class="dashboard-container">
             <div class="user-container">
@@ -35,13 +33,12 @@
                     <h3>Teacher</h3>
                 </div>
 
-                <div class="horizonptal-line">
+                <div class="horizontal-line">
                 </div>
 
                 <div class="menu-list-container">
-                    <ul class="menu-list">
-                        <a class="menu-link" href="#">
-                            <li class="menu-list-styling">
+                    <button class="menu-link menu-link--active" data-for-tab="1">
+                        <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-book-open"></i>
                                 </div>
@@ -49,9 +46,9 @@
                                     Assessments
                                 </div>
                             </li>
-                        </a>
-                        <a class="menu-link" href="#">
-                            <li class="menu-list-styling">
+                    </button>
+                    <button class="menu-link" data-for-tab="2">
+                        <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-file-invoice"></i>                                
                                 </div>
@@ -59,9 +56,9 @@
                                     Term Reports
                                 </div>
                             </li>
-                        </a>
-                        <a class="menu-link" href="#">
-                            <li class="menu-list-styling">
+                    </button>
+                    <button class="menu-link" data-for-tab="3">
+                        <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-user"></i>                            
                                 </div>
@@ -69,9 +66,9 @@
                                     Student Attendance
                                 </div>
                             </li>
-                        </a>
-                        <a class="menu-link" href="#">
-                            <li class="menu-list-styling">
+                    </button>
+                    <button class="menu-link" data-for-tab="4">
+                        <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-question"></i>                            
                                 </div>
@@ -79,17 +76,43 @@
                                     Others
                                 </div>
                             </li>
-                        </a>
-                    </ul>
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="content-container">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada quam ac fermentum tristique. Phasellus mattis velit eget lacus suscipit dapibus. Quisque commodo magna non turpis dapibus, in luctus mi consectetur. Integer imperdiet est ultrices dictum varius. Morbi cursus elit ac vestibulum mattis. Aliquam cursus consequat scelerisque. Fusce sodales pretium urna sed finibus. Duis a ligula et diam facilisis condimentum ut at est. Etiam ac malesuada tortor. Pellentesque ullamcorper felis bibendum, bibendum nisl ac, semper mi. Nunc viverra neque sem, sit amet consequat lectus euismod ut. Pellentesque eget lacus diam. Mauris egestas lacus nulla, ut porta sem egestas sed. Donec arcu nunc, commodo sed odio vel, cursus elementum est. Praesent nec dolor velit.
+        <div class="content-container content-container--active" data-tab="1">
+            <h2>Student Assessments</h2>
+        </div>
 
+        <div class="content-container" data-tab="2">
+            <h2>Tab 2</h2>
+            <p>
+                bbbbbbbbbbbbbbbbbbbbbbbbb
+                bbbbbbbbbbbbbbbbbbbbbbbbb
+                bbbbbbbbbbbbbbbbbbbbbbbbb
+            </p>
+        </div>
+        <div class="content-container" data-tab="3">
+            <h2>Tab 3</h2>
+            <p>
+                ccccccccccccccccccccccccc
+                ccccccccccccccccccccccccc
+                ccccccccccccccccccccccccc
+            </p>
+        </div>
+        <div class="content-container" data-tab="4">
+            <h2>Tab 4</h2>
+            <p>
+                ddddddddddddddddddddddddd
+                ddddddddddddddddddddddddd
+                ddddddddddddddddddddddddd
+            </p>
         </div>
 
     </div>
+
+    <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
+
 
     
 

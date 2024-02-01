@@ -25,6 +25,7 @@ body {
 .content-container {
     grid-column: 2 / 4;
     margin: 2% 3%;
+    height: 100vh;
 }
 
 .user-container {
@@ -67,6 +68,13 @@ body {
     width: 100%;
     margin-top: 6%;
     margin-bottom: 6%;
+}
+
+.horizontal-line-blue {
+    border-bottom: 1px solid #1373B9;
+    width: 100%;
+    margin-top: 0.3%;
+    margin-bottom: 1%;
 }
 
 .menu-list-container {
@@ -246,3 +254,44 @@ body {
     align-items: center;
 }
 
+.labelcsv {
+    background-color: #1373B9;
+    color: #fff;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.jinja-alert-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.csvfileinput {
+    display: none;
+}
+
+.csvdownload-template {
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.downloadcsv-link {
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.downloadcsv-link:hover {
+    text-decoration: none;
+    color: #fff;
+}

@@ -26,22 +26,22 @@ def index():
     employees_data = fetch_data('employees')
     studentlistattendance_data = fetch_data('studentlistattendance')
 
-    active_tab = int(request.args.get('active_tab', 1))
+    # active_tab = int(request.args.get('active_tab', 1))
 
-    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data, active_tab=active_tab)
+    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data)
 
 @app.route('/uploadcsv', methods=['POST'])
 def uploadcsv():
     try:
         if 'csvFile' not in request.files:
             flash('No file part', 'csv_error')
-            return redirect(url_for('index', active_tab=2))
+            return redirect(url_for('index'))
 
         csv_file = request.files['csvFile']
 
         if csv_file.filename == '':
             flash('No selected file', 'csv_error')
-            return redirect(url_for('index', active_tab=2))
+            return redirect(url_for('index'))
 
         if csv_file and csv_file.filename.endswith('.csv'):
             # Read CSV into a DataFrame
@@ -50,8 +50,8 @@ def uploadcsv():
             # Ensure that the required columns are present in the DataFrame
             required_columns = {'student id', 'name', 'class', 'status'}
             if not required_columns.issubset(df.columns.str.strip().str.lower()):
-                flash('Invalid CSV file format. Required columns missing.', 'csv_error')
-                return redirect(url_for('index', active_tab=2))
+                flash('Invalid CSV file format. Headers should be "Student ID, Name, Class, Status"', 'csv_error')
+                return redirect(url_for('index'))
 
             # Process the DataFrame
             cur = mysql.connection.cursor()
@@ -68,7 +68,7 @@ def uploadcsv():
     except Exception as e:
         flash(f'Error processing CSV file: {str(e)}', 'csv_error')
 
-    return redirect(url_for('index', active_tab=2))
+    return redirect(url_for('index'))
 
 
 @app.route('/download_template')

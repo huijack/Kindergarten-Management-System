@@ -1,4 +1,6 @@
 function setupTabs() {
+    const currentTab = localStorage.getItem('activeTab') || '1'; // Retrieve the active tab from localStorage, default to '1'
+
     document.querySelectorAll('.menu-link').forEach(button => {
         button.addEventListener('click', () => {
             const tabNumber = button.dataset.forTab;
@@ -17,8 +19,20 @@ function setupTabs() {
             });
 
             button.classList.add('menu-link--active');
+
+            // Update the hidden input field with the current tab
+            document.getElementById('currentTab').value = tabNumber;
+
+            // Store the active tab in localStorage
+            localStorage.setItem('activeTab', tabNumber);
         });
     });
+
+    // Set the initial active tab based on the value from localStorage
+    const initialActiveTab = document.querySelector(`.menu-link[data-for-tab="${currentTab}"]`);
+    if (initialActiveTab) {
+        initialActiveTab.click();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

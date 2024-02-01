@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="menu-list-container">
-                        <button class="menu-link menu-link--active" data-for-tab="1">
+                        <button class="menu-link {% if active_tab == 1 %}menu-link--active{% endif %}" data-for-tab="1">
                             <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-house"></i>
@@ -43,7 +43,7 @@
                                 </div>
                             </li>
                         </button>
-                        <button class="menu-link" data-for-tab="2">
+                        <button class="menu-link {% if active_tab == 2 %}menu-link--active{% endif %}" data-for-tab="2">
                             <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-list-ul"></i>                            
@@ -53,7 +53,7 @@
                                 </div>
                             </li>
                         </button>
-                        <button class="menu-link" data-for-tab="3">
+                        <button class="menu-link {% if active_tab == 3 %}menu-link--active{% endif %}" data-for-tab="3">
                             <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-user"></i>                            
@@ -63,7 +63,7 @@
                                 </div>
                             </li>
                         </button>
-                        <button class="menu-link" data-for-tab="4">
+                        <button class="menu-link {% if active_tab == 4 %}menu-link--active{% endif %}" data-for-tab="4">
                             <li class="menu-list-styling">
                                 <div class="list-icon">
                                     <i class="fa-solid fa-question"></i>                            
@@ -77,27 +77,44 @@
                 
             </div>
         </div>
-        <div class="content-container content-container--active" data-tab="1">
-            <h2>Employee</h2>
+        <div class="content-container {% if active_tab == 1 %}content-container--active{% endif %}" data-tab="1">
+            <h2 class="mb-0">Employee</h2>
+
+            <div class="horizontal-line-blue">
+            </div>
 
             <div class="button-container">
                 <button type="button" class="btn-toggle-modal" data-toggle="modal" data-target="#myModal">
                     Add Employee
                 </button>
                 
-                <!-- Jinja Success Alert Message -->
-                {%with messages = get_flashed_messages()%}
-                    {%if messages%}
+                <!-- Employee Success Alert Message -->
+                {% with messages = get_flashed_messages(category_filter=['employee_success']) %}
+                    {% if messages %}
                         {% for message in messages %}
-                        <div class="alert alert-success alert-dismissable" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            {{message}}
-                        </div>
-                        {%endfor%}
-                    {%endif%}
-                {%endwith%}
+                            <div class="alert alert-success alert-dismissable" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Employee Error Alert Message -->
+                {% with messages = get_flashed_messages(category_filter=['employee_error']) %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissable" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 
             </div>
 
@@ -267,15 +284,74 @@
 
             </table>
         </div>
-        <div class="content-container" data-tab="2">
-            <h2>Tab 2</h2>
-            <p>
-                bbbbbbbbbbbbbbbbbbbbbbbbb
-                bbbbbbbbbbbbbbbbbbbbbbbbb
-                bbbbbbbbbbbbbbbbbbbbbbbbb
-            </p>
+        <div class="content-container {% if active_tab == 2 %}content-container--active{% endif %}" data-tab="2">
+            <h2 class="mb-0">Student List</h2>
+
+            <div class="horizontal-line-blue">
+            </div>
+
+            <div class="button-container">
+                <div class="jinja-alert-container">
+                    <form action="{{ url_for('uploadcsv') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+
+                            <input class="csvfileinput" type="file" name="csvFile" id="csvFile" accept=".csv">
+                            <label class="labelcsv" for="csvFile">Upload CSV File</label>
+
+                            <input type="hidden" id="currentTab" name="currentTab" value="1"> <!-- Default to the first tab -->
+
+                    </form>
+                    
+                    <!-- CSV Success Alert Message -->
+                    {% with messages = get_flashed_messages(category_filter=['csv_success']) %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-success alert-dismissable ml-2" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- CSV Error Alert Message -->
+                    {% with messages = get_flashed_messages(category_filter=['csv_error']) %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger alert-dismissable ml-2" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <button class="csvdownload-template">
+                    <a class="downloadcsv-link" href="{{ url_for('download_template') }}" download="Student_List_Template.csv">Download CSV Template</a>
+                </button>
+        
+                
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">File Name</th>
+                        <th scope="col">Upload Date</th>
+                        <th scope="col">Action</th>
+                    </tr>
+
+                </thead>
+
+            </table>
+
         </div>
-        <div class="content-container" data-tab="3">
+        <div class="content-container {% if active_tab == 3 %}content-container--active{% endif %}" data-tab="3">
             <h2>Tab 3</h2>
             <p>
                 ccccccccccccccccccccccccc
@@ -283,7 +359,7 @@
                 ccccccccccccccccccccccccc
             </p>
         </div>
-        <div class="content-container" data-tab="4">
+        <div class="content-container {% if active_tab == 4 %}content-container--active{% endif %}" data-tab="4">
             <h2>Tab 4</h2>
             <p>
                 ddddddddddddddddddddddddd
@@ -300,6 +376,7 @@
 
 
     <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/triggerupload.js') }}"></script>
 
     
 </body>

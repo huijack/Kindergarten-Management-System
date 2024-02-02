@@ -60,10 +60,17 @@ def uploadcsv():
             # Process the DataFrame
             cur = mysql.connection.cursor()
             for _, row in df.iterrows():
-                cur.execute("""
-                    INSERT INTO studentlistattendance (student_id, name, class, status) 
-                    VALUES (%s, %s, %s, %s);
-                """, (row['Student ID'], row['Name'], row['Class'], row['Status']))
+                student_id = row['Student ID']
+                cur.execute("SELECT student_id FROM studentlistattendance WHERE student_id = %s", (student_id,))
+                existing_row = cur.fetchone()                
+                
+                if existing_row is None:
+                    cur.execute("""
+                        INSERT INTO studentlistattendance (student_id, name, class, status) 
+                        VALUES (%s, %s, %s, %s);
+                    """, (row['Student ID'], row['Name'], row['Class'], row['Status']))
+                else:
+                    flash(f'Student ID {student_id} already exists in the database', 'csv_error')
 
             mysql.connection.commit()
             flash('CSV File Uploaded Successfully', 'csv_success')

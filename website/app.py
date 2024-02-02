@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, url_for, flash, redirect, send_from_directory
+from flask import Flask, render_template, request, flash, redirect, send_from_directory, Response, url_for
 from flask_mysqldb import MySQL
 import pandas as pd
+import os
+from io import StringIO
 
 
 app = Flask(__name__, template_folder='templates', static_url_path='/static')
@@ -26,9 +28,11 @@ def index():
     employees_data = fetch_data('employees')
     studentlistattendance_data = fetch_data('studentlistattendance')
 
-    # active_tab = int(request.args.get('active_tab', 1))
+    # Get the list of generated CSV filenames (adjust the path accordingly)
+    csv_folder_path = 'uploads'
+    filenames = [f for f in os.listdir(csv_folder_path) if f.endswith('.csv')]
 
-    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data)
+    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data, filenames=filenames)
 
 @app.route('/uploadcsv', methods=['POST'])
 def uploadcsv():
@@ -63,12 +67,29 @@ def uploadcsv():
 
             mysql.connection.commit()
             flash('CSV File Uploaded Successfully', 'csv_success')
-        else:
-            flash('Invalid File. Please upload a CSV file.', 'csv_error')
+
+            # Generate CSV files and serve them dynamically
+            class_values = df['Class'].unique()
+            for class_value in class_values:
+                class_df = df[df['Class'] == class_value]
+                csv_content = class_df[['Student ID', 'Name']].to_csv(index=False, lineterminator='\n')
+                csv_filename = f"Class {class_value} Student List.csv"  # Adjust the filename pattern if needed
+
+                # Save the CSV content to the 'uploads' folder
+                csv_filepath = os.path.join('uploads', csv_filename)
+                with open(csv_filepath, 'w') as csv_file:
+                    csv_file.write(csv_content)
+
     except Exception as e:
         flash(f'Error processing CSV file: {str(e)}', 'csv_error')
 
     return redirect(url_for('index'))
+
+@app.route('/download_csv/<filename>')
+def download_csv(filename):
+    # Assuming the generated CSV files are stored in the 'uploads' folder
+    csv_folder_path = 'uploads'
+    return send_from_directory(csv_folder_path, filename, as_attachment=True)
 
 
 @app.route('/download_template')

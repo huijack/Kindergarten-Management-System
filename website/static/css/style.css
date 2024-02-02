@@ -217,6 +217,22 @@ body {
     transition: opacity 0.3s ease;
 }
 
+.btn-download-csv {
+    background-color: #144F05;
+    color: #fff;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-download-csv:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
 .btn-save-changes:hover, .btn-discard-changes:hover {
     color: #fff;
     text-decoration: none;

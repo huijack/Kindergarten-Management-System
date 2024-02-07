@@ -145,36 +145,14 @@
             <div class="horizontal-line-blue">
             </div>
             <br>
-            <div class="form-group">
             <label for="inputClass"><b>Please select a class that you are teaching:</b></label>
             <select id="inputClass" class="form-control">
                 <option selected>JS1</option>
                 <option>JS2</option>
                 <option>JS3</option>
             </select>
-            </div>
 
             <button type="submit" class="btn btn-enter">Enter</button>
-
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">English</th>
-                        <th scope="col">Malay</th>
-                        <th scope="col">Chinese</th>
-                        <th scope="col">Mathematics</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for row in employees %}
-                    <tr>
-                        <td>{{row.0}}</td>
-                        <td>{{row.1}}</td>
-                        <td>{{row.2}}</td>
-                        <td>{{row.3}}</td>
-                    </tr>
         </div>
         <div class="content-container" data-tab="3">
             <h2>Student Attendance</h2>

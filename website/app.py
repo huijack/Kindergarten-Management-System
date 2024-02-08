@@ -145,10 +145,17 @@ def update():
                 """, (name, email, subject, gender, classroom, id_data))
         flash("Data Updated Successfully", "employee_success")
         return redirect(url_for('index'))
+        
 
 @app.route('/teacher')
 def teacher():
     return render_template('teacher.html')
 
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
+

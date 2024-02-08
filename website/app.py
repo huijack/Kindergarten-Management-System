@@ -11,7 +11,7 @@ app.secret_key = 'ching chong ding dong'
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Jacklim2626'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'kindergarten_system'
 
 mysql = MySQL(app)

@@ -53,3 +53,4 @@ function setupTabs() {
 document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
 });
+

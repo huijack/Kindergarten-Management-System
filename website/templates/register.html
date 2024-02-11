@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Log In Page</title>
+    <title>Register Page</title>
 
     <!-- Bootstrap -->
     <link
@@ -27,25 +27,7 @@
     />
   </head>
   <body>
-    <div class="alert-message-container">
-      <!-- Registration success alert message -->
-      {% with messages = get_flashed_messages(category_filter=['register_success']) %}
-        {% if messages %}
-          {% for message in messages %}
-              <div class="alert alert-success alert-dismissable" role="alert">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-                  {{ message }}
-              </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}    
-    </div>
-
     <div class="login-background">
-
-
       <div class="kindergarten-logo">
         <img
           src="{{ url_for('static', filename='images/Kidz4Learn.jpeg') }}"
@@ -55,11 +37,11 @@
       <div class="login-register-container">
         <div class="login-register-box">
           <div class="login-register-header">
-            <h3>Log In / Register Here</h3>
+            <h3>Account Registration</h3>
           </div>
           <div class="margin-space"></div>
           <div id="login-div" class="login-register-form">
-            <form action="{{ url_for('login') }}" method="POST">
+            <form action="{{ url_for('register') }}" method="POST">
               <div class="form-group">
                 <label class="form-label" for="accountname"
                   >Account Name :</label
@@ -73,7 +55,7 @@
                 />
               </div>
               <div class="margin-space"></div>
-              <div class="form-group mb-1">
+              <div class="form-group">
                 <label class="form-label" for="password">Password :</label>
                 <input
                   type="password"
@@ -83,36 +65,42 @@
                   required
                 />
               </div>
-              <div class="mssg-alert mb-2">
-                {{ msg }}
-              </div>
               <div class="submit-checkbox">
                 <div class="role-text d-flex">
-                  <a class="register-link" href="{{ url_for('register')  }}"
-                    >I don't have an account</a
-                  >
+                  <h6 class="mb-0">Choose your role :</h6>
+                  <div class="checkbox-container">
+                    <input
+                      type="radio"
+                      id="role_type"
+                      name="role_type"
+                      value="Admin"
+                    />
+                    <label class="isAdmin-text ml-2" for="Admin">Admin</label>
+                  </div>
+                  <div class="checkbox-container">
+                    <input
+                      type="radio"
+                      id="role_type"
+                      name="role_type"
+                      value="Teacher"
+                    />
+                    <label class="isAdmin-text ml-2" for="Teacher"
+                      >Teacher</label
+                    >
+                  </div>
                 </div>
                 <div class="submit-container">
-                  <button
-                    class="login-submit-button"
-                    type="submit"
-                    value="Login"
-                  >
+                  <button class="login-submit-button" type="submit">
                     <i class="fa-solid fa-right-to-bracket mr-1"></i>
-                    <div class="submit-button-text ml-1">Log In</div>
+                    <div class="submit-button-text ml-1">Register</div>
                   </button>
                 </div>
               </div>
-
+              <div class="mssg-alert mb-2">{{ msg }}</div>
             </form>
           </div>
         </div>
       </div>
     </div>
   </body>
-
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-
 </html>

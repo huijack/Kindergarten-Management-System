@@ -24,7 +24,8 @@ body {
 .content-container {
   grid-column: 2 / 4;
   margin: 2% 3%;
-  height: 100vh;
+  margin-bottom: 0;
+  height: auto;
 }
 
 .user-container {
@@ -32,7 +33,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin: 6% 0;
+  margin-top: 6%;
 }
 
 .user-profile {
@@ -308,6 +309,7 @@ body {
 
 .login-background {
   display: flex;
+  align-items: center;
   background-color: #1373b9;
   height: 100vh;
   width: 100vw;
@@ -425,7 +427,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1355B9;
+  background-color: #1355b9;
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -444,4 +446,49 @@ body {
 .submit-container {
   display: flex;
   justify-content: flex-end;
+  width: 50%;
+}
+
+.role-text {
+  flex-direction: column;
+  width: 50%;
+}
+
+.role-text h6 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.register-link {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.register-link:hover {
+  color: #fff;
+}
+
+.mssg-alert {
+  width: fit-content;
+  color: #ff6666;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.logout-class {
+  width: 100%;
+  color: #fff;
+}
+
+.logout-class:hover {
+  color: #000000;
+  text-decoration: none;
+}
+
+.alert-message-container {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #1373b9;
 }

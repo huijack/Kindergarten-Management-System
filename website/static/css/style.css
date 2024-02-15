@@ -307,10 +307,10 @@ body {
   color: #fff;
 }
 
-.password-change {
+/* .password-change {
   display: flex;
   flex-direction: row;
-}
+} */
 
 .login-background {
   display: flex;
@@ -496,4 +496,46 @@ body {
   display: flex;
   justify-content: flex-end;
   background-color: #1373b9;
+}
+
+.change-password-text {
+  width: fit-content;
+  display: flex;
+  padding: 8px 10px;
+  background-color: #74bcf1;
+  color: #000000;
+  border-radius: 12px;
+}
+
+.change-password-text h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.change-password-container {
+  width: 40%;
+  margin-top: 3%;
+}
+
+.password-text {
+  font-weight: 500;
+}
+
+.button-container-submit-password {
+  display: flex;
+  justify-content: end;
+}
+
+.confirm-new-password-button {
+  background-color: #072e4a;
+  color: #fff;
+  padding: 8px 10px;
+  font-weight: 500;
+  border-radius: 12px;
+}
+
+.password-border {
+  border: 1px solid #1373b9;
+  border-radius: 8px;
+  padding: 1%;
 }

@@ -307,6 +307,11 @@ body {
   color: #fff;
 }
 
+.password-change {
+  display: flex;
+  flex-direction: row;
+}
+
 .login-background {
   display: flex;
   align-items: center;

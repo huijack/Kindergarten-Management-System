@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, flash, redirect, send_from_directory, Response, url_for
+from flask import Flask, render_template, request, flash, redirect, send_from_directory, Response, url_for, session
 from flask_mysqldb import MySQL
+import MySQLdb.cursors
+import MySQLdb.cursors, re, hashlib
 import pandas as pd
 import os
 from io import StringIO
+
 
 
 app = Flask(__name__, template_folder='templates', static_url_path='/static')
@@ -11,7 +14,7 @@ app.secret_key = 'ching chong ding dong'
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Jacklim2626'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'kindergarten_system'
 
 mysql = MySQL(app)
@@ -24,7 +27,12 @@ def fetch_data(table_name):
     return data
     
 @app.route('/')
-def index():
+def start():
+    return render_template('login.html')
+
+
+@app.route('/admin')
+def admin():
     employees_data = fetch_data('employees')
     studentlistattendance_data = fetch_data('studentlistattendance')
 
@@ -32,20 +40,22 @@ def index():
     csv_folder_path = 'uploads'
     filenames = [f for f in os.listdir(csv_folder_path) if f.endswith('.csv')]
 
-    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data, filenames=filenames)
+    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data, filenames=filenames, accountname= session['accountname'])
+
+
 
 @app.route('/uploadcsv', methods=['POST'])
 def uploadcsv():
     try:
         if 'csvFile' not in request.files:
             flash('No file part', 'csv_error')
-            return redirect(url_for('index'))
+            return redirect(url_for('admin'))
 
         csv_file = request.files['csvFile']
 
         if csv_file.filename == '':
             flash('No selected file', 'csv_error')
-            return redirect(url_for('index'))
+            return redirect(url_for('admin'))
 
         if csv_file and csv_file.filename.endswith('.csv'):
             # Read CSV into a DataFrame
@@ -55,7 +65,7 @@ def uploadcsv():
             required_columns = {'student id', 'name', 'class', 'status'}
             if not required_columns.issubset(df.columns.str.strip().str.lower()):
                 flash('Invalid CSV file format. Headers should be "Student ID, Name, Class, Status"', 'csv_error')
-                return redirect(url_for('index'))
+                return redirect(url_for('admin'))
 
             # Process the DataFrame
             cur = mysql.connection.cursor()
@@ -90,7 +100,7 @@ def uploadcsv():
     except Exception as e:
         flash(f'Error processing CSV file: {str(e)}', 'csv_error')
 
-    return redirect(url_for('index'))
+    return redirect(url_for('admin'))
 
 @app.route('/download_csv/<filename>')
 def download_csv(filename):
@@ -116,7 +126,7 @@ def insert():
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO employees (name, email, subject, gender, class) VALUES (%s, %s, %s, %s, %s)", (name, email, subject, gender, classroom))
         mysql.connection.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('admin'))
 
 @app.route('/delete/<string:id_data>', methods=['GET'])
 def delete(id_data):
@@ -124,7 +134,7 @@ def delete(id_data):
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM employees WHERE id=%s", (id_data,))
     mysql.connection.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('admin'))
 
 
 @app.route('/update', methods=['POST', 'GET'])
@@ -144,11 +154,83 @@ def update():
                 WHERE id=%s
                 """, (name, email, subject, gender, classroom, id_data))
         flash("Data Updated Successfully", "employee_success")
-        return redirect(url_for('index'))
+        return redirect(url_for('admin'))
+        
 
 @app.route('/teacher')
 def teacher():
-    return render_template('teacher.html')
+    return render_template('teacher.html', accountname= session['accountname'])
+
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    msg = ''
+    if request.method == 'POST' and "accountname" in request.form and "password" in request.form:
+        accountname = request.form['accountname']
+        password = request.form['password']
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM account WHERE accountname = %s AND password = %s', (accountname, password))
+
+        account = cursor.fetchone()
+        if account:
+            session["loggedin"] = True
+            session['id'] = account['id']
+            session['accountname'] = account['accountname']
+
+            if account['type'] == 'Admin':
+                return redirect(url_for('admin'))
+            elif account['type'] == 'Teacher':
+                return redirect(url_for('teacher'))
+
+        else:
+            msg = 'Incorrect account name or password!'
+
+    return render_template('login.html', msg=msg)
+
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('accountname', None)
+    return redirect(url_for('login'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    msg = ""
+
+    if request.method == 'POST' and 'accountname' in request.form and 'password' in request.form and 'role_type' in request.form:
+        accountname = request.form['accountname']
+        password = request.form['password']
+        role_type = request.form['role_type']
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM account WHERE accountname = %s', (accountname,))
+        account = cursor.fetchone()
+    
+        if account:
+            msg = 'Account already exists!'
+        
+        # Check if password length is at least 8 characters
+        elif len(password) < 8:
+            msg = 'Password must be at least 8 characters long!'
+
+        # check if any radio button is selected
+        elif role_type == '':
+            msg = 'Please select a role type!'
+
+        elif not accountname or not password or not role_type:
+            msg = 'Please fill out the details!'
+
+        else:
+            cursor.execute('INSERT INTO account (accountname, password, type) VALUES (%s, %s, %s)', (accountname, password, role_type))
+            mysql.connection.commit()
+            flash('Your account is successfully registered!', 'register_success')
+            return redirect(url_for('login'))
+
+    return render_template('register.html', msg=msg)
 
 if __name__ == '__main__':
     app.run(debug=True)
+

@@ -30,7 +30,7 @@
                     T
                 </div>
                 <div class="profile-name">
-                    <h3>Teacher</h3>
+                    <h3>{{accountname}}</h3>
                 </div>
 
                 <div class="horizontal-line">
@@ -77,35 +77,136 @@
                                 </div>
                             </li>
                     </button>
+                    <div class="mb-5"></div>
+                    <div class="mb-5"></div>
+                    <div class="mb-5"></div>
+                    <div class="mb-5"></div>
+                    <button class="menu-link" data-for-tab="5">
+                        <li class="menu-list-styling">
+                            <div class="list-icon">
+                                <i class="fa-solid fa-pen-to-square"></i>                            
+                            </div>
+                            <div class="list-text">
+                                Update Profile
+                            </div>
+                        </li>
+                    </button>
+                    <a class="menu-link logout-class" href="{{ url_for('logout') }}">
+                        <li class="menu-list-styling">
+                            <div class="list-icon">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>                                
+                            </div>
+                            <div class="list-text">
+                                Log Out
+                            </div>
+                            
+                        </li>
+                    </a>
                 </div>
             </div>
         </div>
         <div class="content-container content-container--active" data-tab="1">
             <h2>Student Assessments</h2>
+
+            <div class="horizontal-line-blue">
+            </div>
+            
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputClass"><b>Please select a class that you are teaching:</b></label>
+                        <select id="inputClass" class="form-control">
+                            <option selected>JS1</option>
+                            <option>JS2</option>
+                            <option>JS3</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label for="inputSubject"><b>Please select a subject that you are teaching:</b></label>
+                    <select id="inputSubject" class="form-control">
+                        <option selected>English</option>
+                        <option>Chinese</option>
+                        <option>Malay</option>
+                        <option>Mathematics</option>
+                      </select>
+                  </div>
+                
+                    <div class="form-group col-md-5">
+                    <label for="inputAssessment"><b>Please select an assessment:</b></label>
+                    <select id="inputAssessment" class="form-control">
+                        <option selected>English Language 1</option>
+                        <option>English Language 2</option>
+                        <option>Chinese Language 1</option>
+                        <option>Chinese Language 2</option>
+                        <option>Malay Language 1</option>
+                        <option>Malay Language 2</option>
+                        <option>Mathematics 1</option>
+                        <option>Mathematics 2</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                    <label for="inputName"><b>Enter the student's name:</b></label>
+                    <input type="text" class="form-control" id="inputName">
+                    </div>
+                
+                  <div class="form-group col-md-1">
+                    <label for="inputMarks"><b>Marks:</b></label>
+                    <input type="number" class="form-control" id="inputMarks">
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Confirm</button>
+              </form>
         </div>
 
         <div class="content-container" data-tab="2">
-            <h2>Tab 2</h2>
-            <p>
-                bbbbbbbbbbbbbbbbbbbbbbbbb
-                bbbbbbbbbbbbbbbbbbbbbbbbb
-                bbbbbbbbbbbbbbbbbbbbbbbbb
-            </p>
+            <h2>Term Reports</h2>
+
+            <div class="horizontal-line-blue">
+            </div>
+            <br>
+            <div class="form-row align-items-center">
+            <div><label for="inputClass"><b>Please select a class that you are teaching:</b></label></div>
+            <br>
+            <div class="col-sm-3 my-1">
+                <select id="inputClass" class="form-control">
+                <option selected>JS1</option>
+                <option>JS2</option>
+                <option>JS3</option>
+            </select>
+            </div>
+
+            <div class="col-auto"><button type="submit" class="btn btn-enter">Enter</button></div>
+            </div>
+
+
+
         </div>
         <div class="content-container" data-tab="3">
-            <h2>Tab 3</h2>
+            <h2>Student Attendance</h2>
+
+            <div class="horizontal-line-blue">
+            </div>
+            
             <p>
-                ccccccccccccccccccccccccc
-                ccccccccccccccccccccccccc
-                ccccccccccccccccccccccccc
+                please select a class that you are teaching
             </p>
         </div>
         <div class="content-container" data-tab="4">
-            <h2>Tab 4</h2>
+            <h2>Others</h2>
             <p>
-                ddddddddddddddddddddddddd
-                ddddddddddddddddddddddddd
-                ddddddddddddddddddddddddd
+                Change Password
+            </p>
+        </div>
+        <div class="content-container" data-tab="5">
+            <h2>Update Profile</h2>
+            <p>
+                Update Profile
             </p>
         </div>
 

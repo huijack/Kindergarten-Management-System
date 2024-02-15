@@ -371,13 +371,26 @@
             </p>
         </div>
         <div class="content-container" data-tab="4">
-            <h2>Tab 4</h2>
-            <p>
-                ddddddddddddddddddddddddd
-                ddddddddddddddddddddddddd
-                ddddddddddddddddddddddddd
-                
-            </p>
+            <h2 class = "mb-0">Others</h2>
+
+            <div class="horizontal-line-blue">
+            </div>
+
+            <div class="button-container">
+                <div class = "password-change">
+                    <h3> Change Password </h3>
+                    <form action = "{{ url_for('uploadcsv') }}", method = 'POST' >
+                        <label for ="old password"> Enter your old password: </label>
+                        <input type="text" id="old" name="old_p" class = old><br><br>
+                        <label for ="new password"> Enter your new password: </label>
+                        <input type="text" id="new" name="new_p" class = new><br><br>
+                        <button type = button type="button" class="btn-toggle-modal">
+                            Confirm Changes
+                        </button>
+                    </form>
+
+            
+            
         </div>
 
     </div>

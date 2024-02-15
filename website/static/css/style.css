@@ -311,3 +311,9 @@ body {
     text-decoration: none;
     color: #fff;
 }
+
+.password-change {
+    display: flex;
+    flex-direction: row;
+}
+

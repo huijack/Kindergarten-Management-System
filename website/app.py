@@ -251,8 +251,12 @@ def submit_assessment():
 
         insert_assessment(Class, Subject, Assesssment, Name, Marks)
 
-        return "Assessment submitted successfully!"
+        flash('Assessment submitted successfully!', 'assessment_success')
 
+    else:
+        flash('Please confirm the assessment submission!', 'assessment_error')
+
+    return redirect(url_for('teacher'))
 
 if __name__ == '__main__':
     app.run(debug=True)

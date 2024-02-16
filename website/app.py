@@ -232,8 +232,7 @@ def register():
     return render_template('register.html', msg=msg)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
 
 
 @app.route('/change_password', methods=['GET', 'POST'])
@@ -272,5 +271,6 @@ def change_password():
         flash('Password changed successfully!', 'password_success')
         return redirect(url_for('admin'))
 
-    return render_template('change_password.html')
 
+if __name__ == '__main__':
+    app.run(debug=True)

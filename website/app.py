@@ -232,10 +232,6 @@ def register():
     return render_template('register.html', msg=msg)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
 @app.route('/change_password', methods=['GET', 'POST'])
 def change_password():
     
@@ -254,16 +250,13 @@ def change_password():
 
         if not account or not hashlib.sha256(old_password.encode()).hexdigest() == account['password']:
             flash('Incorrect old password!', 'password_error')
-            return redirect(url_for('change_password'))
 
         # Validate new password
         if new_password != confirm_password:
             flash('New password and confirmation password do not match!', 'password_error')
-            return redirect(url_for('change_password'))
 
         if len(new_password) < 8:
             flash('Password must be at least 8 characters long!', 'password_error')
-            return redirect(url_for('change_password'))
 
         # Update password in the database
         hashed_password = hashlib.sha256(new_password.encode()).hexdigest()
@@ -272,5 +265,10 @@ def change_password():
         flash('Password changed successfully!', 'password_success')
         return redirect(url_for('admin'))
 
-    return render_template('change_password.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
 

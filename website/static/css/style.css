@@ -513,7 +513,7 @@ body {
 }
 
 .change-password-container {
-  width: 40%;
+  width: 60%;
   margin-top: 3%;
 }
 
@@ -538,6 +538,7 @@ body {
   border: 1px solid #1373b9;
   border-radius: 8px;
   padding: 1%;
+  width: 50%;
 }
 
 .alert-outer-container {

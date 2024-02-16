@@ -258,6 +258,42 @@ def submit_assessment():
 
     return redirect(url_for('teacher'))
 
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    try:
+        if 'loggedin' not in session:
+            return redirect(url_for('login'))
+
+        if request.method == 'POST':
+            old_password = request.form.get('old_password')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+
+            # Validate old password
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM account WHERE id = %s', (session['id'],))
+            account = cursor.fetchone()
+
+            if account and old_password == account['password']:
+                # Validate new password
+                if new_password == confirm_password:
+                    if len(new_password) >= 8:
+                        # Update password in the database
+                        cursor.execute('UPDATE account SET password = %s WHERE id = %s', (new_password, session['id']))
+                        mysql.connection.commit()
+                        flash('Password changed successfully!', 'password_success')
+                    else:
+                        flash('Password must be at least 8 characters long!', 'password_error')
+                else:
+                    flash('New password and confirmation password do not match!', 'password_error')
+            else:
+                flash('Incorrect old password!', 'password_error')
+    except Exception as e:
+        flash(f'Error changing password: {str(e)}', 'password_error')
+
+    return redirect(url_for('admin'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-

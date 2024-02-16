@@ -111,11 +111,11 @@
             <div class="horizontal-line-blue">
             </div>
             
-            <form>
+            <form action="{{ url_for('submit_assessment') }}" method="POST">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="inputClass"><b>Please select a class that you are teaching:</b></label>
-                        <select id="inputClass" class="form-control">
+                        <select id="inputClass" name="Class" class="form-control">
                             <option selected>JS1</option>
                             <option>JS2</option>
                             <option>JS3</option>
@@ -126,7 +126,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-5">
                     <label for="inputSubject"><b>Please select a subject that you are teaching:</b></label>
-                    <select id="inputSubject" class="form-control">
+                    <select id="inputSubject" name="Subject" class="form-control">
                         <option selected>English</option>
                         <option>Chinese</option>
                         <option>Malay</option>
@@ -136,7 +136,7 @@
                 
                     <div class="form-group col-md-5">
                     <label for="inputAssessment"><b>Please select an assessment:</b></label>
-                    <select id="inputAssessment" class="form-control">
+                    <select id="inputAssessment" name="Assesssment" class="form-control">
                         <option selected>English Language 1</option>
                         <option>English Language 2</option>
                         <option>Chinese Language 1</option>
@@ -151,16 +151,16 @@
                 <div class="form-row">
                     <div class="form-group col-md-5">
                     <label for="inputName"><b>Enter the student's name:</b></label>
-                    <input type="text" class="form-control" id="inputName">
+                    <input type="text" name="Name" class="form-control" id="inputName">
                     </div>
                 
                   <div class="form-group col-md-1">
                     <label for="inputMarks"><b>Marks:</b></label>
-                    <input type="number" class="form-control" id="inputMarks">
+                    <input type="number" class="form-control" name="Marks" id="inputMarks">
                   </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Confirm</button>
+                <button type="submit" class="btn btn-primary" name="confirm_button">Confirm</button>
               </form>
         </div>
 

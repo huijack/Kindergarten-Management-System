@@ -231,6 +231,29 @@ def register():
 
     return render_template('register.html', msg=msg)
 
+def insert_assessment(Class, Subject, Assesssment, Name, Marks):
+    # Insert assessment data into the database
+    query = "INSERT INTO assessment (Class, Subject, Assesssment, Name, Marks) VALUES (%s, %s, %s, %s, %s)"
+    values = (Class, Subject, Assesssment, Name, Marks)
+    cur = mysql.connection.cursor()
+    cur.execute(query, values)
+    mysql.connection.commit()
+
+@app.route('/submit_assessment', methods=['POST'])
+def submit_assessment():
+    if 'confirm_button' in request.form:
+        # Process form data and insert into the database
+        Class = request.form.get('Class')
+        Subject = request.form.get('Subject')
+        Assesssment = request.form.get('Assesssment')
+        Name = request.form.get('Name')
+        Marks = request.form.get('Marks')
+
+        insert_assessment(Class, Subject, Assesssment, Name, Marks)
+
+        return "Assessment submitted successfully!"
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

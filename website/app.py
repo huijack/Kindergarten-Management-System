@@ -231,39 +231,68 @@ def register():
 
     return render_template('register.html', msg=msg)
 
+def insert_assessment(Class, Subject, Assesssment, Name, Marks):
+    # Insert assessment data into the database
+    query = "INSERT INTO assessment (Class, Subject, Assesssment, Name, Marks) VALUES (%s, %s, %s, %s, %s)"
+    values = (Class, Subject, Assesssment, Name, Marks)
+    cur = mysql.connection.cursor()
+    cur.execute(query, values)
+    mysql.connection.commit()
+
+@app.route('/submit_assessment', methods=['POST'])
+def submit_assessment():
+    if 'confirm_button' in request.form:
+        # Process form data and insert into the database
+        Class = request.form.get('Class')
+        Subject = request.form.get('Subject')
+        Assesssment = request.form.get('Assesssment')
+        Name = request.form.get('Name')
+        Marks = request.form.get('Marks')
+
+        insert_assessment(Class, Subject, Assesssment, Name, Marks)
+
+        flash('Assessment submitted successfully!', 'assessment_success')
+
+    else:
+        flash('Please confirm the assessment submission!', 'assessment_error')
+
+    return redirect(url_for('teacher'))
+
 
 @app.route('/change_password', methods=['GET', 'POST'])
 def change_password():
-    
-    if 'loggedin' not in session:
-        return redirect(url_for('login'))
+    try:
+        if 'loggedin' not in session:
+            return redirect(url_for('login'))
 
-    if request.method == 'POST':
-        old_password = request.form['old_password']
-        new_password = request.form['new_password']
-        confirm_password = request.form['confirm_password']
+        if request.method == 'POST':
+            old_password = request.form.get('old_password')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
 
-        # Validate old password
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM account WHERE id = %s', (session['id'],))
-        account = cursor.fetchone()
+            # Validate old password
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM account WHERE id = %s', (session['id'],))
+            account = cursor.fetchone()
 
-        if not account or not hashlib.sha256(old_password.encode()).hexdigest() == account['password']:
-            flash('Incorrect old password!', 'password_error')
+            if account and old_password == account['password']:
+                # Validate new password
+                if new_password == confirm_password:
+                    if len(new_password) >= 8:
+                        # Update password in the database
+                        cursor.execute('UPDATE account SET password = %s WHERE id = %s', (new_password, session['id']))
+                        mysql.connection.commit()
+                        flash('Password changed successfully!', 'password_success')
+                    else:
+                        flash('Password must be at least 8 characters long!', 'password_error')
+                else:
+                    flash('New password and confirmation password do not match!', 'password_error')
+            else:
+                flash('Incorrect old password!', 'password_error')
+    except Exception as e:
+        flash(f'Error changing password: {str(e)}', 'password_error')
 
-        # Validate new password
-        if new_password != confirm_password:
-            flash('New password and confirmation password do not match!', 'password_error')
-
-        if len(new_password) < 8:
-            flash('Password must be at least 8 characters long!', 'password_error')
-
-        # Update password in the database
-        hashed_password = hashlib.sha256(new_password.encode()).hexdigest()
-        cursor.execute('UPDATE account SET password = %s WHERE id = %s', (hashed_password, session['id']))
-        mysql.connection.commit()
-        flash('Password changed successfully!', 'password_success')
-        return redirect(url_for('admin'))
+    return redirect(url_for('admin'))
 
 
 if __name__ == '__main__':

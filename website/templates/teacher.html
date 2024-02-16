@@ -1,222 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teacher Page</title>
 
-
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-    
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"
+    ></script>
+
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">    
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"
+    ></script>
 
     <!-- FontAwesome Icons -->
-    <script src="https://kit.fontawesome.com/f0c6770306.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/f0c6770306.js"
+      crossorigin="anonymous"
+    ></script>
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>    
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
     <div class="body-container">
-        <!-- Dashboard -->
-        <div class="dashboard-container">
-            <div class="user-container">
-                <div class="user-profile">
-                    T
-                </div>
-                <div class="profile-name">
-                    <h3>{{accountname}}</h3>
-                </div>
+      <!-- Dashboard -->
+      <div class="dashboard-container">
+        <div class="user-container">
+          <div class="user-profile">T</div>
+          <div class="profile-name">
+            <h3>{{accountname}}</h3>
+          </div>
 
-                <div class="horizontal-line">
-                </div>
+          <div class="horizontal-line"></div>
 
-                <div class="menu-list-container">
-                    <button class="menu-link menu-link--active" data-for-tab="1">
-                        <li class="menu-list-styling">
-                                <div class="list-icon">
-                                    <i class="fa-solid fa-book-open"></i>
-                                </div>
-                                <div class="list-text">
-                                    Assessments
-                                </div>
-                            </li>
-                    </button>
-                    <button class="menu-link" data-for-tab="2">
-                        <li class="menu-list-styling">
-                                <div class="list-icon">
-                                    <i class="fa-solid fa-file-invoice"></i>                                
-                                </div>
-                                <div class="list-text">
-                                    Term Reports
-                                </div>
-                            </li>
-                    </button>
-                    <button class="menu-link" data-for-tab="3">
-                        <li class="menu-list-styling">
-                                <div class="list-icon">
-                                    <i class="fa-solid fa-user"></i>                            
-                                </div>
-                                <div class="list-text">
-                                    Student Attendance
-                                </div>
-                            </li>
-                    </button>
-                    <button class="menu-link" data-for-tab="4">
-                        <li class="menu-list-styling">
-                                <div class="list-icon">
-                                    <i class="fa-solid fa-question"></i>                            
-                                </div>
-                                <div class="list-text">
-                                    Others
-                                </div>
-                            </li>
-                    </button>
-                    <div class="mb-5"></div>
-                    <div class="mb-5"></div>
-                    <div class="mb-5"></div>
-                    <div class="mb-5"></div>
-                    <button class="menu-link" data-for-tab="5">
-                        <li class="menu-list-styling">
-                            <div class="list-icon">
-                                <i class="fa-solid fa-pen-to-square"></i>                            
-                            </div>
-                            <div class="list-text">
-                                Update Profile
-                            </div>
-                        </li>
-                    </button>
-                    <a class="menu-link logout-class" href="{{ url_for('logout') }}">
-                        <li class="menu-list-styling">
-                            <div class="list-icon">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i>                                
-                            </div>
-                            <div class="list-text">
-                                Log Out
-                            </div>
-                            
-                        </li>
-                    </a>
+          <div class="menu-list-container">
+            <button class="menu-link menu-link--active" data-for-tab="1">
+              <li class="menu-list-styling">
+                <div class="list-icon">
+                  <i class="fa-solid fa-book-open"></i>
                 </div>
-            </div>
+                <div class="list-text">Assessments</div>
+              </li>
+            </button>
+            <button class="menu-link" data-for-tab="2">
+              <li class="menu-list-styling">
+                <div class="list-icon">
+                  <i class="fa-solid fa-file-invoice"></i>
+                </div>
+                <div class="list-text">Term Reports</div>
+              </li>
+            </button>
+            <button class="menu-link" data-for-tab="3">
+              <li class="menu-list-styling">
+                <div class="list-icon">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="list-text">Student Attendance</div>
+              </li>
+            </button>
+            <button class="menu-link" data-for-tab="4">
+              <li class="menu-list-styling">
+                <div class="list-icon">
+                  <i class="fa-solid fa-question"></i>
+                </div>
+                <div class="list-text">Others</div>
+              </li>
+            </button>
+            <div class="mb-5"></div>
+            <div class="mb-5"></div>
+            <div class="mb-5"></div>
+            <div class="mb-5"></div>
+            <button class="menu-link" data-for-tab="5">
+              <li class="menu-list-styling">
+                <div class="list-icon">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div class="list-text">Update Profile</div>
+              </li>
+            </button>
+            <a class="menu-link logout-class" href="{{ url_for('logout') }}">
+              <li class="menu-list-styling">
+                <div class="list-icon">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="list-text">Log Out</div>
+              </li>
+            </a>
+          </div>
         </div>
-        <div class="content-container content-container--active" data-tab="1">
-            <h2>Student Assessments</h2>
+      </div>
+      <div class="content-container content-container--active" data-tab="1">
+        <h2>Student Assessments</h2>
 
-            <div class="horizontal-line-blue">
-            </div>
-            
-            <form>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="inputClass"><b>Please select a class that you are teaching:</b></label>
-                        <select id="inputClass" class="form-control">
-                            <option selected>JS1</option>
-                            <option>JS2</option>
-                            <option>JS3</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-group col-md-5">
-                    <label for="inputSubject"><b>Please select a subject that you are teaching:</b></label>
-                    <select id="inputSubject" class="form-control">
-                        <option selected>English</option>
-                        <option>Chinese</option>
-                        <option>Malay</option>
-                        <option>Mathematics</option>
-                      </select>
-                  </div>
-                
-                    <div class="form-group col-md-5">
-                    <label for="inputAssessment"><b>Please select an assessment:</b></label>
-                    <select id="inputAssessment" class="form-control">
-                        <option selected>English Language 1</option>
-                        <option>English Language 2</option>
-                        <option>Chinese Language 1</option>
-                        <option>Chinese Language 2</option>
-                        <option>Malay Language 1</option>
-                        <option>Malay Language 2</option>
-                        <option>Mathematics 1</option>
-                        <option>Mathematics 2</option>
-                    </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                    <label for="inputName"><b>Enter the student's name:</b></label>
-                    <input type="text" class="form-control" id="inputName">
-                    </div>
-                
-                  <div class="form-group col-md-1">
-                    <label for="inputMarks"><b>Marks:</b></label>
-                    <input type="number" class="form-control" id="inputMarks">
-                  </div>
-                </div>
+        <div class="horizontal-line-blue"></div>
 
-                <button type="submit" class="btn btn-primary">Confirm</button>
-              </form>
+        <!-- Assessment Success Alert Message -->
+        {% with messages =
+        get_flashed_messages(category_filter=['assessment_success']) %} {% if
+        messages %} {% for message in messages %}
+        <div class="alert-outer-container">
+          <div
+            class="alert alert-success alert-dismissable alert-container"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
+        {% endfor %} {% endif %} {% endwith %}
 
-        <div class="content-container" data-tab="2">
-            <h2>Term Reports</h2>
+        <!-- Assessment Error Alert Message -->
+        {% with messages =
+        get_flashed_messages(category_filter=['assessment_error']) %} {% if
+        messages %} {% for message in messages %}
+        <div class="alert-outer-container">
+          <div
+            class="alert alert-danger alert-dismissable alert-container"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        {% endfor %} {% endif %} {% endwith %}
 
-            <div class="horizontal-line-blue">
-            </div>
-            <br>
-            <div class="form-row align-items-center">
-            <div><label for="inputClass"><b>Please select a class that you are teaching:</b></label></div>
-            <br>
-            <div class="col-sm-3 my-1">
-                <select id="inputClass" class="form-control">
+        <form action="{{ url_for('submit_assessment') }}" method="POST">
+          <input type="hidden" id="currentTab" name="currentTab" value="1" />
+
+          <div class="form-row">
+            <div class="form-group custom-col-assessment">
+              <label for="inputClass"
+                ><b>Please select a class that you are teaching:</b></label
+              >
+              <select
+                id="inputClass"
+                name="Class"
+                class="form-control form-class form-outline"
+                required
+              >
                 <option selected>JS1</option>
                 <option>JS2</option>
                 <option>JS3</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3"></div>
+
+          <div class="form-row">
+            <div class="form-group custom-col-assessment">
+              <label for="inputSubject"
+                ><b>Please select a subject that you are teaching:</b></label
+              >
+              <select
+                id="inputSubject"
+                name="Subject"
+                class="form-control form-outline"
+                required
+              >
+                <option selected>English</option>
+                <option>Chinese</option>
+                <option>Malay</option>
+                <option>Mathematics</option>
+              </select>
+            </div>
+
+            <div class="form-group custom-col-assessment ml-5">
+              <label for="inputAssessment"
+                ><b>Please select an assessment:</b></label
+              >
+              <select
+                id="inputAssessment"
+                name="Assesssment"
+                class="form-control form-outline"
+                required
+              >
+                <option selected>English Language 1</option>
+                <option>English Language 2</option>
+                <option>Chinese Language 1</option>
+                <option>Chinese Language 2</option>
+                <option>Malay Language 1</option>
+                <option>Malay Language 2</option>
+                <option>Mathematics 1</option>
+                <option>Mathematics 2</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3"></div>
+
+          <div class="form-row">
+            <div class="form-group custom-col-assessment">
+              <label for="inputName"><b>Enter the student's name:</b></label>
+              <input
+                type="text"
+                name="Name"
+                class="form-control form-outline"
+                id="inputName"
+                required
+              />
+            </div>
+
+            <div class="form-group col-md-1 ml-5">
+              <label for="inputMarks"><b>Marks:</b></label>
+              <input
+                type="number"
+                class="form-control form-outline"
+                name="Marks"
+                id="inputMarks"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-3"></div>
+
+          <div class="assessment-submit-button">
+            <button type="submit" class="btn-submit" name="confirm_button">
+              Confirm
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="content-container" data-tab="2">
+        <h2>Term Reports</h2>
+
+        <div class="horizontal-line-blue"></div>
+        <br />
+        <div class="form-row align-items-center">
+          <div>
+            <label for="inputClass"
+              ><b>Please select a class that you are teaching:</b></label
+            >
+          </div>
+          <br />
+          <div class="col-sm-3 my-1">
+            <select id="inputClass" class="form-control">
+              <option selected>JS1</option>
+              <option>JS2</option>
+              <option>JS3</option>
             </select>
-            </div>
+          </div>
 
-            <div class="col-auto"><button type="submit" class="btn btn-enter">Enter</button></div>
-            </div>
-
-
-
+          <div class="col-auto">
+            <button type="submit" class="btn btn-enter">Enter</button>
+          </div>
         </div>
-        <div class="content-container" data-tab="3">
-            <h2>Student Attendance</h2>
+      </div>
+      <div class="content-container" data-tab="3">
+        <h2>Student Attendance</h2>
 
-            <div class="horizontal-line-blue">
-            </div>
-            
-            <p>
-                please select a class that you are teaching
-            </p>
-        </div>
-        <div class="content-container" data-tab="4">
-            <h2>Others</h2>
-            <p>
-                Change Password
-            </p>
-        </div>
-        <div class="content-container" data-tab="5">
-            <h2>Update Profile</h2>
-            <p>
-                Update Profile
-            </p>
-        </div>
+        <div class="horizontal-line-blue"></div>
 
+        <p>please select a class that you are teaching</p>
+      </div>
+      <div class="content-container" data-tab="4">
+        <h2>Others</h2>
+        <p>Change Password</p>
+      </div>
+      <div class="content-container" data-tab="5">
+        <h2>Update Profile</h2>
+        <p>Update Profile</p>
+      </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
-
-
-    
-
-    
-</body>
+  </body>
 </html>

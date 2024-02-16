@@ -40,7 +40,7 @@
             <h3>Account Registration</h3>
           </div>
           <div class="margin-space"></div>
-          <div id="login-div" class="login-register-form">
+          <div id="register-div" class="login-register-form">
             <form action="{{ url_for('register') }}" method="POST">
               <div class="form-group">
                 <label class="form-label" for="accountname"
@@ -75,7 +75,7 @@
                       name="role_type"
                       value="Admin"
                     />
-                    <label class="isAdmin-text ml-2" for="Admin">Admin</label>
+                    <label class="isAdmin-text ml-2" for="role_type">Admin</label>
                   </div>
                   <div class="checkbox-container">
                     <input
@@ -84,7 +84,7 @@
                       name="role_type"
                       value="Teacher"
                     />
-                    <label class="isAdmin-text ml-2" for="Teacher"
+                    <label class="isAdmin-text ml-2" for="role_type"
                       >Teacher</label
                     >
                   </div>

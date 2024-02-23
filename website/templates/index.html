@@ -379,13 +379,172 @@
 
         </div>
         <div class="content-container" data-tab="3">
-            <h2>Tab 3</h2>
-            <p>
-                ccccccccccccccccccccccccc
-                ccccccccccccccccccccccccc
-                ccccccccccccccccccccccccc
-            </p>
+            <h2 class="mb-0">Student Profile</h2>
+            <div class="horizontal-line-blue"></div>
+        
+
+            <!-- Student Profile Success Alert Message -->
+            {% with messages = get_flashed_messages(category_filter=['studentprofile_success']) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissable alert-container" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Student Profile Error Alert Message -->
+            {% with messages = get_flashed_messages(category_filter=['studentprofile_error']) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissable alert-container" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="show-class-button">
+                <div class="show-class-width">
+                    {% for class_tuple in classes %}
+                    <button type="button" class="class-button class-btn-styling button-class-gap" data-for-class="{{ class_tuple[0] }}">Class {{ class_tuple[0] }}</button>
+                    {% endfor %}
+                </div>
+                <div class="add-student-profile-button">
+                    <button type="button" class="btn-toggle-modal" data-toggle="modal" data-target="#modalAddStudentProfile">Add Student Profile</button>
+                </div>
+            </div>
+
+            <!-- Add Student Profile Modal -->
+            <div class="modal fade" id="modalAddStudentProfile" tabindex="-1" role="dialog" aria-labelledby="myModalStudentProfileLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content custom-modal-size">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="myModalStudentProfileLabel">Add Student Profile</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('add_studentprofile') }}" method="POST">
+                                <div class="row">
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputName">Student Name:</label>
+                                        <input type="text" name="student_name" class="form-control" id="inputName" placeholder="Enter Student Name" required>
+                                    </div>
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputStudentId">Student ID:</label>
+                                        <input type="text" name="student_id" class="form-control" id="inputStudentId" placeholder="Enter Student ID" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputClass">Class:</label>
+                                        <input type="text" name="class" class="form-control" id="inputClass" placeholder="Enter Class" required>
+                                    </div>
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputParentName">Parent's Name:</label>
+                                        <input type="text" name="parent_name" class="form-control" id="inputParentName" placeholder="Enter Parent's Name" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputParentContact">Parent's Contact:</label>
+                                        <input type="text" name="parent_contact" class="form-control" id="inputParentContact" placeholder="Enter Parent's Contact" required>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-discard-changes" data-dismiss="modal">Discard Changes</button>
+                                <button type="submit" class="btn btn-save-changes">Save changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Student ID</th>
+                        <th scope="col">Class</th>
+                        <th scope="col">Parent's Name</th>
+                        <th scope="col">Parents's Contact</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in studentprofile %}
+                        {% if row[2] == selected_class %}
+                            <tr class="class-row" data-class="{{ row[2] }}">
+                                <td>{{ row[1]}}</td>
+                                <td>{{ row[0]}}</td>
+                                <td>{{ row[2]}}</td>
+                                <td>{{ row[3]}}</td>
+                                <td>{{ row[4]}}</td>
+                                <td>
+                                    <a href="/update_studentprofile/{{ row[0] }}" class="btn-edit" data-toggle="modal" data-target="#modalUpdateStudentProfile{{row[0]}}">Update</a>
+                                    <a href="/delete_studentprofile/{{ row[0] }}" onclick="return confirm('Are you sure you want to delete this data?')" class="btn-delete">Delete</a>
+                                </td>
+                            </tr>
+
+                            <!-- Edit Student Profile Modal -->
+                            <div class="modal fade" id="modalUpdateStudentProfile{{row[0]}}" tabindex="-1" role="dialog" aria-labelledby="modalLabelUpdateSProfile" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content custom-modal-size">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabelUpdateSProfile">Update Student Profile</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url_for('update_studentprofile')}}" method="POST">
+                                            <input type="hidden" name="student_id" value="{{ row[0]}} ">
+                                            <div class="row">
+                                                <div class="form-group col-md-6 mb-3">
+                                                    <label for="inputName">Student Name:</label>
+                                                    <input value="{{ row[1]}}" type="text" name="student_name" class="form-control" id="inputName" placeholder="Enter Name" required>
+                                                </div>
+                                                <div class="form-group col-md-6 mb-3">
+                                                    <label for="inputClass">Class:</label>
+                                                    <select name="class" id="class" class="form-control">
+                                                        <option disabled>Choose...</option>
+                                                        {% for class_tuple in classes %}
+                                                            <option value="{{ class_tuple[0] }}" {% if row[2] == class_tuple[0] %} selected {% endif %}>{{ class_tuple[0] }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6 mb-3">
+                                                    <label for="inputParentName">Parent's Name:</label>
+                                                    <input value="{{ row[3]}}" type="text" name="parent_name" class="form-control" id="inputParentName" placeholder="Enter Parent's Name" required>
+                                                </div>
+                                                <div class="form-group col-md-6 mb-3">
+                                                    <label for="inputParentContact">Parent's Contact:</label>
+                                                    <input value="{{ row[4]}}" type="text" name="parent_contact" class="form-control" id="inputParentContact" placeholder="Enter Parent's Contact" required>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-discard-changes" data-dismiss="modal">Discard Changes</button>
+                                            <button type="submit" class="btn btn-save-changes">Save changes</button>
+                                        </form>
+                                    </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        
         <div class="content-container" data-tab="4">
             <h2 class = "mb-0">Others</h2>
 
@@ -463,7 +622,7 @@
 
     <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
     <script src="{{ url_for('static', filename='js/triggerupload.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/studentprofileclass.js') }}"></script>
     
 </body>
 </html>

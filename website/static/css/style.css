@@ -585,3 +585,32 @@ body {
   font-weight: 500;
   border-radius: 12px;
 }
+
+.show-class-button {
+  display: flex;
+}
+
+.class-btn-styling {
+  background-color: #1373b9;
+  color: #fff;
+  padding: 8px 10px;
+  font-weight: 500;
+  border-radius: 12px;
+  border: none;
+}
+
+.custom-modal-size {
+  width: 600px;
+}
+
+.show-class-width {
+  display: flex;
+  width: 50%;
+  gap: 10px;
+}
+
+.add-student-profile-button {
+  width: 50%;
+  display: flex;
+  justify-content: end;
+}

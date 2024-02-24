@@ -1,14 +1,19 @@
 from flask import Flask, render_template, request, flash, redirect, send_from_directory, Response, url_for, session
 from flask_mysqldb import MySQL
+from logging import FileHandler, WARNING
 import MySQLdb.cursors
 import MySQLdb.cursors, re, hashlib
 import pandas as pd
 import os
+import json
+import ast
 from io import StringIO
 
 
 
 app = Flask(__name__, template_folder='templates', static_url_path='/static')
+FileHandler = FileHandler('errorlog.txt')
+FileHandler.setLevel(WARNING)
 app.secret_key = 'ching chong ding dong'
 
 # MySQL configurations
@@ -18,6 +23,14 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'kindergarten_system'
 
 mysql = MySQL(app)
+
+def fetch_distinct_class():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT DISTINCT class FROM studentprofile")
+    classes = cur.fetchall()
+    cur.close()
+    return classes
+
 
 def fetch_data(table_name):
     cur = mysql.connection.cursor()
@@ -33,15 +46,24 @@ def start():
 
 @app.route('/admin')
 def admin():
+    selected_class = request.args.get('class')
+
+    classes = fetch_distinct_class()
     employees_data = fetch_data('employees')
     studentlistattendance_data = fetch_data('studentlistattendance')
+    
+    studentprofile_data = []
+    if selected_class:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM studentprofile WHERE class = %s", (selected_class,))
+        studentprofile_data = cur.fetchall()
+        cur.close()
 
     # Get the list of generated CSV filenames (adjust the path accordingly)
     csv_folder_path = 'uploads'
     filenames = [f for f in os.listdir(csv_folder_path) if f.endswith('.csv')]
 
-    return render_template('index.html', employees=employees_data, studentlistattendance=studentlistattendance_data, filenames=filenames, accountname= session['accountname'])
-
+    return render_template('index.html', classes=classes, employees=employees_data, studentlistattendance=studentlistattendance_data, studentprofile=studentprofile_data, filenames=filenames, accountname=session['accountname'], selected_class=selected_class)
 
 
 @app.route('/uploadcsv', methods=['POST'])
@@ -102,6 +124,7 @@ def uploadcsv():
 
     return redirect(url_for('admin'))
 
+
 @app.route('/download_csv/<filename>')
 def download_csv(filename):
     # Assuming the generated CSV files are stored in the 'uploads' folder
@@ -127,6 +150,7 @@ def insert():
         cur.execute("INSERT INTO employees (name, email, subject, gender, class) VALUES (%s, %s, %s, %s, %s)", (name, email, subject, gender, classroom))
         mysql.connection.commit()
         return redirect(url_for('admin'))
+
 
 @app.route('/delete/<string:id_data>', methods=['GET'])
 def delete(id_data):
@@ -156,10 +180,27 @@ def update():
         flash("Data Updated Successfully", "employee_success")
         return redirect(url_for('admin'))
         
+def fetch_distinct_class01():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT DISTINCT class FROM termreport")
+    classes01 = cur.fetchall()
+    cur.close()
+    return classes01
 
 @app.route('/teacher')
 def teacher():
-    return render_template('teacher.html', accountname= session['accountname'])
+    selected_class01 = request.args.get('class')
+
+    classes01 = fetch_distinct_class01()
+
+    termreport_data = []
+    if selected_class01:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
+        termreport_data = cur.fetchall()
+        cur.close()
+
+    return render_template('teacher.html', termreport=termreport_data, classes01=classes01, accountname= session['accountname'])
 
 
 
@@ -189,12 +230,14 @@ def login():
 
     return render_template('login.html', msg=msg)
 
+
 @app.route('/logout')
 def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('accountname', None)
     return redirect(url_for('login'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -231,6 +274,7 @@ def register():
 
     return render_template('register.html', msg=msg)
 
+
 def insert_assessment(Class, Subject, Assesssment, Name, Marks):
     # Insert assessment data into the database
     query = "INSERT INTO assessment (Class, Subject, Assesssment, Name, Marks) VALUES (%s, %s, %s, %s, %s)"
@@ -238,6 +282,7 @@ def insert_assessment(Class, Subject, Assesssment, Name, Marks):
     cur = mysql.connection.cursor()
     cur.execute(query, values)
     mysql.connection.commit()
+
 
 @app.route('/submit_assessment', methods=['POST'])
 def submit_assessment():
@@ -294,6 +339,66 @@ def change_password():
 
     return redirect(url_for('admin'))
 
+@app.route('/add_studentprofile', methods=['POST'])
+def add_studentprofile():
+    try:
+        if request.method == 'POST':
+            student_name = request.form.get('student_name')
+            student_id = request.form.get('student_id')
+            class_value = request.form.get('class')
+            parent_name = request.form.get('parent_name')
+            parent_contact = request.form.get('parent_contact')
+
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                INSERT INTO studentprofile (student_id, name, class, parentname, parentcontact)
+                VALUES (%s, %s, %s, %s, %s)
+                """, (student_id, student_name, class_value, parent_name, parent_contact))
+            mysql.connection.commit()
+            flash('Student profile added successfully!', 'studentprofile_success')
+            return redirect(url_for('admin'))            
+            
+    except Exception as e:
+        flash(f'Error adding student profile: {str(e)}', 'studentprofile_error')
+
+    return redirect(url_for('admin'))
+
+
+@app.route('/update_studentprofile', methods=['POST'])
+def update_studentprofile():
+    try:
+        if request.method == 'POST':
+            student_id = request.form.get('student_id')
+            student_name = request.form.get('student_name')
+            class_value = request.form.get('class')
+            parent_name = request.form.get('parent_name')
+            parent_contact = request.form.get('parent_contact')
+
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                UPDATE studentprofile SET name=%s, class=%s, parentname=%s, parentcontact=%s 
+                WHERE student_id=%s
+                """, (student_name, class_value, parent_name, parent_contact, student_id))
+            mysql.connection.commit()
+            flash('Student profile updated successfully!', 'studentprofile_success')
+
+    except Exception as e:
+        flash(f'Error updating student profile: {str(e)}', 'studentprofile_error')
+
+    return redirect(url_for('admin'))
+
+
+@app.route('/delete_studentprofile/<int:student_id>', methods=['GET'])
+def delete_studentprofile(student_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM studentprofile WHERE student_id=%s", (student_id,))
+        mysql.connection.commit()
+        flash('Student profile deleted successfully!', 'studentprofile_success')
+    except Exception as e:
+        flash(f'Error deleting student profile: {str(e)}', 'studentprofile_error')
+    
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)

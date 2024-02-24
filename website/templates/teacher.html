@@ -222,14 +222,11 @@
         <br />
         <div class="show-class-button">
           <div class="show-class-width">
-              {% for class_tuple in classes01 %}
-              <button type="button" class="class-button class-btn-styling button-class-gap" data-for-class="{{ class_tuple[0] }}">Class {{ class_tuple[0] }}</button>
+              {% for class_tuples in classes01 %}
+              <button type="button" class="class-button class-btn-styling button-class-gap" data-for-class="{{ class_tuples[0] }}">Class {{ class_tuples[0] }}</button>
               {% endfor %}
           </div>
 
-          <div class="col-auto">
-            <button type="submit" class="btn btn-enter">Enter</button>
-          </div>
         </div>
         <table class="table table-hover">
           <thead>

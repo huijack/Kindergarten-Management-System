@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, send_from_directory, Response, url_for, session
 from flask_mysqldb import MySQL
-from logging import FileHandler, WARNING
 import MySQLdb.cursors
 import MySQLdb.cursors, re, hashlib
 import pandas as pd
@@ -12,8 +11,7 @@ from io import StringIO
 
 
 app = Flask(__name__, template_folder='templates', static_url_path='/static')
-FileHandler = FileHandler('errorlog.txt')
-FileHandler.setLevel(WARNING)
+
 app.secret_key = 'ching chong ding dong'
 
 # MySQL configurations

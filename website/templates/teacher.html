@@ -220,19 +220,11 @@
 
         <div class="horizontal-line-blue"></div>
         <br />
-        <div class="form-row align-items-center">
-          <div>
-            <label for="inputClass"
-              ><b>Please select a class that you are teaching:</b></label
-            >
-          </div>
-          <br />
-          <div class="col-sm-3 my-1">
-            <select id="inputClass" class="form-control">
-              <option selected>JS1</option>
-              <option>JS2</option>
-              <option>JS3</option>
-            </select>
+        <div class="show-class-button">
+          <div class="show-class-width">
+              {% for class_tuple in classes01 %}
+              <button type="button" class="class-button class-btn-styling button-class-gap" data-for-class="{{ class_tuple[0] }}">Class {{ class_tuple[0] }}</button>
+              {% endfor %}
           </div>
 
           <div class="col-auto">
@@ -242,14 +234,35 @@
         <table class="table table-hover">
           <thead>
               <tr>
+                  <th scope="col">Id</th>
                   <th scope="col">Class</th>
                   <th scope="col">Name</th>
                   <th scope="col">English</th>
                   <th scope="col">Malay</th>
                   <th scope="col">Chinese</th>
                   <th scope="col">Math</th>
+                  <th scope="col">Action</th>
               </tr>
           </thead>
+          <tbody>
+            {% for row in termreport %}
+                {% if row[1] == selected_class01 %}
+                    <tr class="class-row" data-class="{{ row[1] }}">
+                        <td>{{ row[0]}}</td>
+                        <td>{{ row[1]}}</td>
+                        <td>{{ row[2]}}</td>
+                        <td>{{ row[3]}}</td>
+                        <td>{{ row[4]}}</td>
+                        <td>{{ row[5]}}</td>
+                        <td>{{ row[6]}}</td>
+                        <td>
+                            <a href="" class="btn-edit" data-toggle="modal" data-target="">Update</a>
+                            <a href="" onclick="return confirm('Are you sure you want to delete this data?')" class="btn-delete">Delete</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+          </tbody>
         </table>
       </div>
       <div class="content-container" data-tab="3">

@@ -183,9 +183,9 @@ def update():
 def fetch_distinct_class01():
     cur = mysql.connection.cursor()
     cur.execute("SELECT DISTINCT class FROM termreport")
-    classes = cur.fetchall()
+    classes01 = cur.fetchall()
     cur.close()
-    return classes
+    return classes01
 
 @app.route('/teacher')
 def teacher():

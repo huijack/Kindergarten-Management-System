@@ -180,10 +180,27 @@ def update():
         flash("Data Updated Successfully", "employee_success")
         return redirect(url_for('admin'))
         
+def fetch_distinct_class01():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT DISTINCT class FROM termreport")
+    classes = cur.fetchall()
+    cur.close()
+    return classes
 
 @app.route('/teacher')
 def teacher():
-    return render_template('teacher.html', accountname= session['accountname'])
+    selected_class01 = request.args.get('class')
+    classes01 = fetch_distinct_class01()
+    
+
+    termreport_data = []
+    if selected_class01:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
+            termreport_data = cur.fetchall()
+            cur.close()
+            
+    return render_template('teacher.html', termreport=termreport_data, classes=classes01, accountname= session['accountname'])
 
 
 

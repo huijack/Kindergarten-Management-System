@@ -326,6 +326,12 @@ def change_password():
                         cursor.execute('UPDATE account SET password = %s WHERE id = %s', (new_password, session['id']))
                         mysql.connection.commit()
                         flash('Password changed successfully!', 'password_success')
+
+                        if account['type'] == 'Admin':
+                            return redirect(url_for('admin'))
+                        elif account['type'] == 'Teacher':
+                            return redirect(url_for('teacher'))
+                        
                     else:
                         flash('Password must be at least 8 characters long!', 'password_error')
                 else:
@@ -334,8 +340,11 @@ def change_password():
                 flash('Incorrect old password!', 'password_error')
     except Exception as e:
         flash(f'Error changing password: {str(e)}', 'password_error')
-
-    return redirect(url_for('admin'))
+    
+    if account['type'] == 'Teacher':
+        return redirect(url_for('teacher'))
+    elif account['type'] == 'Admin':
+        return redirect(url_for('admin'))
 
 @app.route('/add_studentprofile', methods=['POST'])
 def add_studentprofile():

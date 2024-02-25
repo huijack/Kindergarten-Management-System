@@ -187,19 +187,19 @@ def fetch_distinct_class01():
 
 @app.route('/teacher')
 def teacher():
-    selected_class01 = request.args.get('class')
+    if request.method == 'GET':
+        selected_class01 = request.args.get('class_term')
 
-    classes01 = fetch_distinct_class01()
+        classes01 = fetch_distinct_class01()
 
-    termreport_data = []
-    if selected_class01:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
-        termreport_data = cur.fetchall()
-        cur.close()
+        termreport_data = []
+        if selected_class01:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
+            termreport_data = cur.fetchall()
+            cur.close()
 
-    return render_template('teacher.html', termreport=termreport_data, classes01=classes01, accountname= session['accountname'])
-
+        return render_template('teacher.html', termreport=termreport_data, classes01=classes01, accountname= session['accountname'])        
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -397,6 +397,43 @@ def delete_studentprofile(student_id):
         flash(f'Error deleting student profile: {str(e)}', 'studentprofile_error')
     
     return redirect(url_for('admin'))
+
+
+@app.route('/update_termreport', methods=['POST'])
+def update_termreport():
+    try:
+        if request.method == 'POST':
+            student_id = request.form.get('student_id')
+            english = request.form.get('english')
+            malay = request.form.get('malay')
+            chinese = request.form.get('chinese')
+            math = request.form.get('math')
+
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                UPDATE termreport SET english=%s, malay=%s, chinese=%s, math=%s 
+                WHERE studentid=%s
+                """, (english, malay, chinese, math, student_id))
+            mysql.connection.commit()
+            flash('Term report updated successfully!', 'termreport_success')
+
+    except Exception as e:
+        flash(f'Error updating term report: {str(e)}', 'termreport_error')
+    
+    return redirect(url_for('teacher'))
+    
+@app.route('/delete_termreport/<int:student_id>', methods=['GET'])
+def delete_termreport(student_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM termreport WHERE studentid=%s", (student_id,))
+        mysql.connection.commit()
+        flash('Term report deleted successfully!', 'termreport_success')
+    except Exception as e:
+        flash(f'Error deleting term report: {str(e)}', 'termreport_error')
+    
+    return redirect(url_for('teacher'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

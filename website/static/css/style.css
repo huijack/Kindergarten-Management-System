@@ -546,6 +546,11 @@ body {
   display: flex;
 }
 
+.alert-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .alert-container {
   width: 30%;
 }
@@ -599,6 +604,15 @@ body {
   border: none;
 }
 
+.class-btn-styling-enter {
+  background-color: #072e4a;
+  color: #fff;
+  padding: 8px 15px;
+  font-weight: 500;
+  border-radius: 12px;
+  border: none;
+}
+
 .custom-modal-size {
   width: 600px;
 }
@@ -613,4 +627,24 @@ body {
   width: 50%;
   display: flex;
   justify-content: end;
+}
+
+.custom-form-size {
+  width: 40%;
+  height: 80%;
+}
+
+.class-term-submit-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.term_report_row {
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.custom-group-termreport {
+  width: 40%;
 }

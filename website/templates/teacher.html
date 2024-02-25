@@ -1,284 +1,386 @@
-{% extends "base.html" %}
-{% block content %}
-    <div class="body-container">
-      <!-- Dashboard -->
-      <div class="dashboard-container">
-        <div class="user-container">
-          <div class="user-profile">T</div>
-          <div class="profile-name">
-            <h3>{{accountname}}</h3>
-          </div>
-
-          <div class="horizontal-line"></div>
-
-          <div class="menu-list-container">
-            <button class="menu-link menu-link--active" data-for-tab="1">
-              <li class="menu-list-styling">
-                <div class="list-icon">
-                  <i class="fa-solid fa-book-open"></i>
-                </div>
-                <div class="list-text">Assessments</div>
-              </li>
-            </button>
-            <button class="menu-link" data-for-tab="2">
-              <li class="menu-list-styling">
-                <div class="list-icon">
-                  <i class="fa-solid fa-file-invoice"></i>
-                </div>
-                <div class="list-text">Term Reports</div>
-              </li>
-            </button>
-            <button class="menu-link" data-for-tab="3">
-              <li class="menu-list-styling">
-                <div class="list-icon">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="list-text">Student Attendance</div>
-              </li>
-            </button>
-            <button class="menu-link" data-for-tab="4">
-              <li class="menu-list-styling">
-                <div class="list-icon">
-                  <i class="fa-solid fa-question"></i>
-                </div>
-                <div class="list-text">Others</div>
-              </li>
-            </button>
-            <div class="mb-5"></div>
-            <div class="mb-5"></div>
-            <div class="mb-5"></div>
-            <div class="mb-5"></div>
-            <button class="menu-link" data-for-tab="5">
-              <li class="menu-list-styling">
-                <div class="list-icon">
-                  <i class="fa-solid fa-pen-to-square"></i>
-                </div>
-                <div class="list-text">Update Profile</div>
-              </li>
-            </button>
-            <a class="menu-link logout-class" href="{{ url_for('logout') }}">
-              <li class="menu-list-styling">
-                <div class="list-icon">
-                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </div>
-                <div class="list-text">Log Out</div>
-              </li>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="content-container content-container--active" data-tab="1">
-        <h2>Student Assessments</h2>
-
-        <div class="horizontal-line-blue"></div>
-
-        <!-- Assessment Success Alert Message -->
-        {% with messages =
-        get_flashed_messages(category_filter=['assessment_success']) %} {% if
-        messages %} {% for message in messages %}
-        <div class="alert-outer-container">
-          <div
-            class="alert alert-success alert-dismissable alert-container"
-            role="alert"
-          >
-            {{ message }}
-            <button
-              type="button"
-              class="close"
-              data-dismiss="alert"
-              aria-label="close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        </div>
-        {% endfor %} {% endif %} {% endwith %}
-
-        <!-- Assessment Error Alert Message -->
-        {% with messages =
-        get_flashed_messages(category_filter=['assessment_error']) %} {% if
-        messages %} {% for message in messages %}
-        <div class="alert-outer-container">
-          <div
-            class="alert alert-danger alert-dismissable alert-container"
-            role="alert"
-          >
-            {{ message }}
-            <button
-              type="button"
-              class="close"
-              data-dismiss="alert"
-              aria-label="close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        </div>
-        {% endfor %} {% endif %} {% endwith %}
-
-        <form action="{{ url_for('submit_assessment') }}" method="POST">
-          <input type="hidden" id="currentTab" name="currentTab" value="1" />
-
-          <div class="form-row">
-            <div class="form-group custom-col-assessment">
-              <label for="inputClass"
-                ><b>Please select a class that you are teaching:</b></label
-              >
-              <select
-                id="inputClass"
-                name="Class"
-                class="form-control form-class form-outline"
-                required
-              >
-                <option selected>JS1</option>
-                <option>JS2</option>
-                <option>JS3</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="mb-3"></div>
-
-          <div class="form-row">
-            <div class="form-group custom-col-assessment">
-              <label for="inputSubject"
-                ><b>Please select a subject that you are teaching:</b></label
-              >
-              <select
-                id="inputSubject"
-                name="Subject"
-                class="form-control form-outline"
-                required
-              >
-                <option selected>English</option>
-                <option>Chinese</option>
-                <option>Malay</option>
-                <option>Mathematics</option>
-              </select>
-            </div>
-
-            <div class="form-group custom-col-assessment ml-5">
-              <label for="inputAssessment"
-                ><b>Please select an assessment:</b></label
-              >
-              <select
-                id="inputAssessment"
-                name="Assesssment"
-                class="form-control form-outline"
-                required
-              >
-                <option selected>English Language 1</option>
-                <option>English Language 2</option>
-                <option>Chinese Language 1</option>
-                <option>Chinese Language 2</option>
-                <option>Malay Language 1</option>
-                <option>Malay Language 2</option>
-                <option>Mathematics 1</option>
-                <option>Mathematics 2</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="mb-3"></div>
-
-          <div class="form-row">
-            <div class="form-group custom-col-assessment">
-              <label for="inputName"><b>Enter the student's name:</b></label>
-              <input
-                type="text"
-                name="Name"
-                class="form-control form-outline"
-                id="inputName"
-                required
-              />
-            </div>
-
-            <div class="form-group col-md-1 ml-5">
-              <label for="inputMarks"><b>Marks:</b></label>
-              <input
-                type="number"
-                class="form-control form-outline"
-                name="Marks"
-                id="inputMarks"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="mb-3"></div>
-
-          <div class="assessment-submit-button">
-            <button type="submit" class="btn-submit" name="confirm_button">
-              Confirm
-            </button>
-          </div>
-        </form>
+{% extends "base.html" %} {% block content %}
+<div class="body-container">
+  <!-- Dashboard -->
+  <div class="dashboard-container">
+    <div class="user-container">
+      <div class="user-profile">T</div>
+      <div class="profile-name">
+        <h3>{{accountname}}</h3>
       </div>
 
-      <div class="content-container" data-tab="2">
-        <h2>Term Reports</h2>
+      <div class="horizontal-line"></div>
 
-        <div class="horizontal-line-blue"></div>
-        <br />
-        <div class="show-class-button">
-          <div class="show-class-width">
-              {% for class_tuples in classes01 %}
-              <button type="button" class="class-button class-btn-styling button-class-gap" data-for-class="{{ class_tuples[0] }}">Class {{ class_tuples[0] }}</button>
-              {% endfor %}
-          </div>
-
-        </div>
-        <table class="table table-hover">
-          <thead>
-              <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Class</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">English</th>
-                  <th scope="col">Malay</th>
-                  <th scope="col">Chinese</th>
-                  <th scope="col">Math</th>
-                  <th scope="col">Action</th>
-              </tr>
-          </thead>
-          <tbody>
-            {% for row in termreport %}
-                {% if row[1] == selected_class01 %}
-                    <tr class="class-row" data-class="{{ row[1] }}">
-                        <td>{{ row[0]}}</td>
-                        <td>{{ row[1]}}</td>
-                        <td>{{ row[2]}}</td>
-                        <td>{{ row[3]}}</td>
-                        <td>{{ row[4]}}</td>
-                        <td>{{ row[5]}}</td>
-                        <td>{{ row[6]}}</td>
-                        <td>
-                            <a href="" class="btn-edit" data-toggle="modal" data-target="">Update</a>
-                            <a href="" onclick="return confirm('Are you sure you want to delete this data?')" class="btn-delete">Delete</a>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="content-container" data-tab="3">
-        <h2>Student Attendance</h2>
-
-        <div class="horizontal-line-blue"></div>
-
-        <p>please select a class that you are teaching</p>
-      </div>
-      <div class="content-container" data-tab="4">
-        <h2>Others</h2>
-        <p>Change Password</p>
-      </div>
-      <div class="content-container" data-tab="5">
-        <h2>Update Profile</h2>
-        <p>Update Profile</p>
+      <div class="menu-list-container">
+        <button class="menu-link menu-link--active" data-for-tab="1">
+          <li class="menu-list-styling">
+            <div class="list-icon">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div class="list-text">Assessments</div>
+          </li>
+        </button>
+        <button class="menu-link" data-for-tab="2">
+          <li class="menu-list-styling">
+            <div class="list-icon">
+              <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div class="list-text">Term Reports</div>
+          </li>
+        </button>
+        <button class="menu-link" data-for-tab="3">
+          <li class="menu-list-styling">
+            <div class="list-icon">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="list-text">Student Attendance</div>
+          </li>
+        </button>
+        <button class="menu-link" data-for-tab="4">
+          <li class="menu-list-styling">
+            <div class="list-icon">
+              <i class="fa-solid fa-question"></i>
+            </div>
+            <div class="list-text">Others</div>
+          </li>
+        </button>
+        <div class="mb-5"></div>
+        <div class="mb-5"></div>
+        <div class="mb-5"></div>
+        <div class="mb-5"></div>
+        <button class="menu-link" data-for-tab="5">
+          <li class="menu-list-styling">
+            <div class="list-icon">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+            <div class="list-text">Update Profile</div>
+          </li>
+        </button>
+        <a class="menu-link logout-class" href="{{ url_for('logout') }}">
+          <li class="menu-list-styling">
+            <div class="list-icon">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </div>
+            <div class="list-text">Log Out</div>
+          </li>
+        </a>
       </div>
     </div>
+  </div>
+  <div class="content-container content-container--active" data-tab="1">
+    <h2>Student Assessments</h2>
 
-    <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
+    <div class="horizontal-line-blue"></div>
+
+    <!-- Assessment Success Alert Message -->
+    {% with messages =
+    get_flashed_messages(category_filter=['assessment_success']) %} {% if
+    messages %} {% for message in messages %}
+    <div class="alert-outer-container">
+      <div class="alert alert-success alert-dismissable alert-container" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <!-- Assessment Error Alert Message -->
+    {% with messages =
+    get_flashed_messages(category_filter=['assessment_error']) %} {% if messages
+    %} {% for message in messages %}
+    <div class="alert-outer-container">
+      <div class="alert alert-danger alert-dismissable alert-container" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <form action="{{ url_for('submit_assessment') }}" method="POST">
+      <input type="hidden" id="currentTab" name="currentTab" value="1" />
+
+      <div class="form-row">
+        <div class="form-group custom-col-assessment">
+          <label for="inputClass"><b>Please select a class that you are teaching:</b></label>
+          <select id="inputClass" name="Class" class="form-control form-class form-outline" required>
+            <option selected>JS1</option>
+            <option>JS2</option>
+            <option>JS3</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3"></div>
+
+      <div class="form-row">
+        <div class="form-group custom-col-assessment">
+          <label for="inputSubject"><b>Please select a subject that you are teaching:</b></label>
+          <select id="inputSubject" name="Subject" class="form-control form-outline" required>
+            <option selected>English</option>
+            <option>Chinese</option>
+            <option>Malay</option>
+            <option>Mathematics</option>
+          </select>
+        </div>
+
+        <div class="form-group custom-col-assessment ml-5">
+          <label for="inputAssessment"><b>Please select an assessment:</b></label>
+          <select id="inputAssessment" name="Assesssment" class="form-control form-outline" required>
+            <option selected>English Language 1</option>
+            <option>English Language 2</option>
+            <option>Chinese Language 1</option>
+            <option>Chinese Language 2</option>
+            <option>Malay Language 1</option>
+            <option>Malay Language 2</option>
+            <option>Mathematics 1</option>
+            <option>Mathematics 2</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3"></div>
+
+      <div class="form-row">
+        <div class="form-group custom-col-assessment">
+          <label for="inputName"><b>Enter the student's name:</b></label>
+          <input type="text" name="Name" class="form-control form-outline" id="inputName" required />
+        </div>
+
+        <div class="form-group col-md-1 ml-5">
+          <label for="inputMarks"><b>Marks:</b></label>
+          <input type="number" class="form-control form-outline" name="Marks" id="inputMarks" required />
+        </div>
+      </div>
+
+      <div class="mb-3"></div>
+
+      <div class="assessment-submit-button">
+        <button type="submit" class="btn-submit" name="confirm_button">
+          Confirm
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="content-container" data-tab="2">
+    <h2>Term Reports</h2>
+    <div class="horizontal-line-blue"></div>
+
+    <form id="termReportForm" action="{{ url_for('teacher') }}" method="GET">
+      <div class="form-row term_report_row">
+        <div class="form-group">
+          <label for="inputClassTerm"><b>Please select a class that you are teaching:</b></label>
+          <div class="class-term-submit-container">
+            <select id="inputClassTerm" name="class_term" class="form-control form-class form-outline custom-form-size"
+              required>
+              <option disabled selected>Choose...</option>
+              {% for class_tuples in classes01 %}
+              <option value="{{ class_tuples[0] }}">
+                {{ class_tuples[0] }}
+              </option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="class-btn-styling-enter">Enter</button>
+          </div>
+        </div>
+
+        <div class="custom-group-termreport">
+          <!-- Termreport sucess jinja message -->
+          {% with messages = get_flashed_messages(category_filter=['termreport_success']) %}
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert-outer-container alert-right">
+            <div class="alert alert-success alert-dismissable" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+          </div>
+
+          <!-- Termreport error jinja message-->
+          {% with messages = get_flashed_messages(category_filter=['termreport_error']) %}
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert-outer-container alert-right">
+            <div class="alert alert-danger alert-dismissable" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+          </div>
+
+    </form>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Student ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Class</th>
+          <th scope="col">English</th>
+          <th scope="col">Malay</th>
+          <th scope="col">Chinese</th>
+          <th scope="col">Math</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="termReportTable">
+        {% for term_report in termreport %}
+        <tr>
+          <td>{{ term_report[0] }}</td>
+          <td>{{ term_report[2] }}</td>
+          <td>{{ term_report[1] }}</td>
+          <td>{{ term_report[3] }}</td>
+          <td>{{ term_report[4] }}</td>
+          <td>{{ term_report[5] }}</td>
+          <td>{{ term_report[6] }}</td>
+          <td>
+            <a href="/update_termreport/{{ term_report[0] }}" class="btn-edit" data-toggle="modal"
+              data-target="#modalUpdateTermReport{{ term_report[0] }}">Update</a>
+            <a href="/delete_termreport/{{ term_report[0] }}" class="btn-delete"
+              onclick="return confirm('Are you sure you want to delete this data?')">Delete</a>
+          </td>
+        </tr>
+        <!-- Update Term Report Modal -->
+        <div class="modal fade" id="modalUpdateTermReport{{ term_report[0] }}" tabindex="-1" role="dialog"
+          aria-labelledby="modalLabelUpdateTermReport{{ term_report[0] }}" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content custom-modal-size">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabelUpdateTermReport">
+                  Update Term Report
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{{ url_for('update_termreport') }}" method="POST">
+                  <input type="hidden" name="student_id" value="{{ term_report[0] }}" />
+                  <div class="row">
+                    <div class="form-group col-md-6 mb-3">
+                      <label for="inputName">Student Name:</label>
+                      <input type="text" class="form-control" id="inputName" name="student_name"
+                        value="{{ term_report[2] }}" disabled />
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                      <label for="inputClass">Class:</label>
+                      <input type="text" class="form-control" id="inputClass" name="class_name"
+                        value="{{ term_report[1] }}" disabled />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-md-6 mb-3">
+                      <label for="english">English</label>
+                      <select id="inputEnglish" name="english" class="form-control">
+                        <option disabled>Choose...</option>
+                        <option value="A+" {% if term_report[3]=="A+" %} selected {% endif %}>A+</option>
+                        <option value="A" {% if term_report[3]=="A" %} selected {% endif %}>A</option>
+                        <option value="A-" {% if term_report[3]=="A-" %} selected {% endif %}>A-</option>
+                        <option value="B+" {% if term_report[3]=="B+" %} selected {% endif %}>B+</option>
+                        <option value="B" {% if term_report[3]=="B" %} selected {% endif %}>B</option>
+                        <option value="B-" {% if term_report[3]=="B-" %} selected {% endif %}>B-</option>
+                        <option value="C+" {% if term_report[3]=="C+" %} selected {% endif %}>C+</option>
+                        <option value="C" {% if term_report[3]=="C" %} selected {% endif %}>C</option>
+                        <option value="C-" {% if term_report[3]=="C-" %} selected {% endif %}>C-</option>
+                        <option value="F" {% if term_report[3]=="F" %} selected {% endif %}>F</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                      <label for="malay">Malay</label>
+                      <select id="inputMalay" name="malay" class="form-control">
+                        <option disabled>Choose...</option>
+                        <option value="A+" {% if term_report[4]=="A+" %} selected {% endif %}>A+</option>
+                        <option value="A" {% if term_report[4]=="A" %} selected {% endif %}>A</option>
+                        <option value="A-" {% if term_report[4]=="A-" %} selected {% endif %}>A-</option>
+                        <option value="B+" {% if term_report[4]=="B+" %} selected {% endif %}>B+</option>
+                        <option value="B" {% if term_report[4]=="B" %} selected {% endif %}>B</option>
+                        <option value="B-" {% if term_report[4]=="B-" %} selected {% endif %}>B-</option>
+                        <option value="C+" {% if term_report[4]=="C+" %} selected {% endif %}>C+</option>
+                        <option value="C" {% if term_report[4]=="C" %} selected {% endif %}>C</option>
+                        <option value="C-" {% if term_report[4]=="C-" %} selected {% endif %}>C-</option>
+                        <option value="F" {% if term_report[4]=="F" %} selected {% endif %}>F</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-md-6 mb-3">
+                      <label for="chinese">Chinese</label>
+                      <select id="inputChinese" name="chinese" class="form-control">
+                        <option disabled>Choose...</option>
+                        <option value="A+" {% if term_report[5]=="A+" %} selected {% endif %}>A+</option>
+                        <option value="A" {% if term_report[5]=="A" %} selected {% endif %}>A</option>
+                        <option value="A-" {% if term_report[5]=="A-" %} selected {% endif %}>A-</option>
+                        <option value="B+" {% if term_report[5]=="B+" %} selected {% endif %}>B+</option>
+                        <option value="B" {% if term_report[5]=="B" %} selected {% endif %}>B</option>
+                        <option value="B-" {% if term_report[5]=="B-" %} selected {% endif %}>B-</option>
+                        <option value="C+" {% if term_report[5]=="C+" %} selected {% endif %}>C+</option>
+                        <option value="C" {% if term_report[5]=="C" %} selected {% endif %}>C</option>
+                        <option value="C-" {% if term_report[5]=="C-" %} selected {% endif %}>C-</option>
+                        <option value="F" {% if term_report[5]=="F" %} selected {% endif %}>F</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                      <label for="math">Math</label>
+                      <select id="inputMath" name="math" class="form-control">
+                        <option disabled>Choose...</option>
+                        <option value="A+" {% if term_report[6]=="A+" %} selected {% endif %}>A+</option>
+                        <option value="A" {% if term_report[6]=="A" %} selected {% endif %}>A</option>
+                        <option value="A-" {% if term_report[6]=="A-" %} selected {% endif %}>A-</option>
+                        <option value="B+" {% if term_report[6]=="B+" %} selected {% endif %}>B+</option>
+                        <option value="B" {% if term_report[6]=="B" %} selected {% endif %}>B</option>
+                        <option value="B-" {% if term_report[6]=="B-" %} selected {% endif %}>B-</option>
+                        <option value="C+" {% if term_report[6]=="C+" %} selected {% endif %}>C+</option>
+                        <option value="C" {% if term_report[6]=="C" %} selected {% endif %}>C</option>
+                        <option value="C-" {% if term_report[6]=="C-" %} selected {% endif %}>C-</option>
+                        <option value="F" {% if term_report[6]=="F" %} selected {% endif %}>F</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn btn-discard-changes" data-dismiss="modal">Discard Changes</button>
+                  <button type="submit" class="btn btn-save-changes">Save changes</button>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="content-container" data-tab="3">
+    <h2>Student Attendance</h2>
+
+    <div class="horizontal-line-blue"></div>
+
+    <p>please select a class that you are teaching</p>
+  </div>
+  <div class="content-container" data-tab="4">
+    <h2>Others</h2>
+    <p>Change Password</p>
+  </div>
+  <div class="content-container" data-tab="5">
+    <h2>Update Profile</h2>
+    <p>Update Profile</p>
+  </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
 
 {% endblock %}

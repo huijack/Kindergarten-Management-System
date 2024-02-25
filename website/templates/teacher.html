@@ -370,8 +370,75 @@
     <p>please select a class that you are teaching</p>
   </div>
   <div class="content-container" data-tab="4">
-    <h2>Others</h2>
-    <p>Change Password</p>
+    <h2 class="mb-0">Others</h2>
+
+    <div class="horizontal-line-blue"></div>
+
+    <!-- Password Change Success Alert Message -->
+    {% with messages = get_flashed_messages(category_filter=['password_success']) %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert-outer-container">
+      <div class="alert alert-success alert-dismissable" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- Password Change Error Alert Message -->
+    {% with messages = get_flashed_messages(category_filter=['password_error']) %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert-outer-container">
+      <div class="alert alert-danger alert-dismissable" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="password-change">
+      <div class="change-password-text">
+        <h3>Change Password</h3>
+      </div>
+      <div class="mb-3"></div>
+      <form action ="{{ url_for('change_password') }}" method="POST" class="change-password-container">
+        <div class="form-group">
+            <label for="old_password" class="password-text"> Enter your old password: </label>
+            <input type="password" id="old_password" name="old_password" class="password-border form-control" required>  
+        </div>
+
+        <div class="mb-3"></div>
+
+        <div class="form-group">
+            <label for ="new_password" class="password-text"> Enter your new password: </label>
+            <input type="password" id="new_password" name="new_password" class="password-border form-control" required>
+        </div>
+
+        <div class="mb-3"></div>
+
+
+        <div class="form-group">
+            <label for="confirm_password" class="password-text"> Confirm your new password: </label>
+            <input type="password" id="confirm_password" name="confirm_password" class="password-border form-control" required><br>
+        </div>
+
+        <div class="mb-3"></div>
+        <div class="button-container-submit-password">
+            <button type="submit" class="confirm-new-password-button">Confirm Changes</button>
+        </div>
+      </form>
+
+    </div>
   </div>
   <div class="content-container" data-tab="5">
     <h2>Update Profile</h2>

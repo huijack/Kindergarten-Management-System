@@ -507,12 +507,22 @@
    <table class="table table-hover">
     <thead>
       <tr>
-        <th scope="col">No</th>
-        <th scope="col">Name</th>
         <th scope="col">ID</th>
-        <th scope="col">Status</th>
+        <th scope="col">Name</th>
+        <th scope="col">Class</th>
+        <th scope="col">Status</th>     
       </tr>
     </thead>
+    {% for student in students %}
+    <tr>
+      <td>{{ student[0] }}</td>
+      <td>{{ student[1] }}</td>
+      <td>{{ student[2] }}</td>
+      <td>
+        <input type="checkbox" name="attendanceCheckbox" value="{{ student.id }}"> Absent
+      </td>
+    </tr>
+  {% endfor %}
     <tbody>
     </tbody>
   </table>

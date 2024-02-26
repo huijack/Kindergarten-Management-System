@@ -469,6 +469,17 @@ def delete_termreport(student_id):
     
     return redirect(url_for('teacher'))
 
+@app.route('/attendance', methods=['GET', 'POST'])
+def attendance():
+    # Fetch students for initial display
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM studentlisattendance WHERE class='JS1' ")
+    students = cur.fetchall()
+    cur.close()
+
+
+    return render_template('teacher.html', students=students)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

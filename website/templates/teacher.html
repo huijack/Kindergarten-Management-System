@@ -477,7 +477,33 @@
 
     <div class="horizontal-line-blue"></div>
 
-    <p>please select a class that you are teaching</p>
+    <form>
+      <div class="form-row">
+        <div class="form-group custom-col-attendance">
+          <label for="inputClasses"><b>Please select a class that you are teaching:</b></label>
+          <select id="inputClasses" name="Classes" class="form-control form-outline" required>
+            <option selected>JS1</option>
+            <option>JS2</option>
+            <option>JS3</option>
+          </select>
+        </div>
+
+        <div class="form-group custom-col-attendance ml-5">
+          <label for="inputSubjects"><b>Please select a subject that you are teaching:</b></label>
+          <select id="inputSubjects" name="Subjects" class="form-control form-outline" required>
+            <option selected>English</option>
+            <option>Chinese</option>
+            <option>Malay</option>
+            <option>Mathematics</option>
+          </select>
+        </div>
+      </div>
+      <div class="attendance-submit-button">
+        <button type="submit" class="btn-submit" name="confirmButton">
+          Confirm
+        </button>
+      </div>
+    </form>
   </div>
   <div class="content-container" data-tab="4">
     <h2 class="mb-0">Others</h2>

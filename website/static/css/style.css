@@ -642,9 +642,7 @@ body {
 
 .term_report_row {
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
 }
 
-.custom-group-termreport {
-  width: 40%;
-}
+

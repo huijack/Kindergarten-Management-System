@@ -408,6 +408,32 @@ def delete_studentprofile(student_id):
     return redirect(url_for('admin'))
 
 
+@app.route('/add_termreport', methods=['POST'])
+def add_termreport():
+    try:
+        if request.method == 'POST':
+            student_id = request.form.get('student_id')
+            student_name = request.form.get('student_name')
+            class_value = request.form.get('class_name')
+            english = request.form.get('english')
+            malay = request.form.get('malay')
+            chinese = request.form.get('chinese')
+            math = request.form.get('math')
+
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                INSERT INTO termreport (studentid, class, name, english, malay, chinese, math)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (student_id, class_value, student_name, english, malay, chinese, math))
+            mysql.connection.commit()
+            flash('Term report added successfully!', 'termreport_success')
+    
+    except Exception as e:
+        flash(f'Error adding term report: {str(e)}', 'termreport_error')
+
+    return redirect(url_for('teacher'))
+
+
 @app.route('/update_termreport', methods=['POST'])
 def update_termreport():
     try:

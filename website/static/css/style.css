@@ -645,5 +645,12 @@ body {
   align-items: center;
 }
 
-
+.btn-confirm-attendance{
+  background-color: #072e4a;
+  color: #fff;
+  padding: 8px 15px;
+  font-weight: 500;
+  border-radius: 12px;
+  border: none;
+}
 

@@ -654,3 +654,8 @@ body {
   border: none;
 }
 
+.attendance-submit-button {
+  display: flex;
+  justify-content: end;
+}
+

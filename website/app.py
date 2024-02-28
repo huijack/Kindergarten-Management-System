@@ -185,12 +185,22 @@ def fetch_distinct_class01():
     cur.close()
     return classes01
 
+def fetch_distinct_class02():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT DISTINCT class FROM studentlistattendance")
+    classes02 = cur.fetchall()
+    cur.close()
+    return classes02
+
 @app.route('/teacher')
 def teacher():
     if request.method == 'GET':
         selected_class01 = request.args.get('class_term')
+        selected_class02 = request.args.get('class_attend')
 
         classes01 = fetch_distinct_class01()
+        classes02 = fetch_distinct_class02()
+
 
         termreport_data = []
         if selected_class01:
@@ -198,8 +208,15 @@ def teacher():
             cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
             termreport_data = cur.fetchall()
             cur.close()
+        
+        attendance_data = []
+        if selected_class02:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM studentlistattendance WHERE class = %s", (selected_class02,))
+            attendance_data = cur.fetchall()
+            cur.close()
 
-        return render_template('teacher.html', termreport=termreport_data, classes01=classes01, accountname= session['accountname'])        
+        return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01,classes02=classes02, accountname= session['accountname'])        
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -469,16 +486,15 @@ def delete_termreport(student_id):
     
     return redirect(url_for('teacher'))
 
-@app.route('/attendance', methods=['GET', 'POST'])
-def attendance():
-    # Fetch students for initial display
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM studentlisattendance WHERE class='JS1' ")
-    students = cur.fetchall()
-    cur.close()
+# @app.route('/attendance', methods=['GET', 'POST'])
+# def attendance():
+#     # Fetch students for initial display
+#     # cur = mysql.connection.cursor()
+#     # cur.execute("SELECT * FROM studentlisattendance WHERE class='JS1' ")
+#     # students = cur.fetchall()
+#     # cur.close()
 
-
-    return render_template('teacher.html', students=students)
+#     return render_template('teacher.html', students=students)
 
 
 if __name__ == '__main__':

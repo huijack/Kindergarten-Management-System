@@ -226,8 +226,9 @@ def login():
         accountname = request.form['accountname']
         password = request.form['password']
 
+        hash_pass = hashlib.md5(password.encode('utf-8')).hexdigest()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM account WHERE accountname = %s AND password = %s', (accountname, password))
+        cursor.execute('SELECT * FROM account WHERE accountname = %s AND password = %s', (accountname, hash_pass))
 
         account = cursor.fetchone()
         if account:
@@ -282,7 +283,9 @@ def register():
             msg = 'Please fill out the details!'
 
         else:
-            cursor.execute('INSERT INTO account (accountname, password, type) VALUES (%s, %s, %s)', (accountname, password, role_type))
+            hash_pass = hashlib.md5(password.encode('utf-8')).hexdigest()
+
+            cursor.execute('INSERT INTO account (accountname, password, type) VALUES (%s, %s, %s)', (accountname, hash_pass, role_type))
             mysql.connection.commit()
             flash('Your account is successfully registered!', 'register_success')
             return redirect(url_for('login'))

@@ -477,6 +477,38 @@
 
     <div class="horizontal-line-blue"></div>
 
+    {% with messages = get_flashed_messages(category_filter=['attendance_success']) %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert-outer-container">
+      <div class="alert alert-success alert-dismissable" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(category_filter=['attendance_error']) %}
+    {% if messages %}
+    {% for message in messages %}
+
+    <div class="alert-outer-container">
+      <div class="alert alert-danger alert-dismissable" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     <form id="attendanceForm" action="{{ url_for('teacher') }}" method="GET">
       <div class="form-row">
         <div class="form-group">
@@ -497,49 +529,45 @@
         </div>
       </div>
    </form>
-   <table class="table table-hover">
-    <thead>
+   <form action="{{ url_for('confirm_attendance' )}}" method="POST">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Class</th>
+          <th scope="col">Status</th>     
+        </tr>
+      </thead>
+      <tbody>
+      {% for student in attendance %}
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Class</th>
-        <th scope="col">Status</th>     
+          <input type="hidden" name="student_id" value="{{ student[0] }}">
+          <input type="hidden" name="class" value="{{ student[2] }}">
+        <td>{{ student[0] }}</td>
+        <td>{{ student[1] }}</td>
+        <td>{{ student[2] }}</td>
+        <td>
+          <input type="checkbox" name="attendanceCheckbox" value="{{ student[3] }}"> {{ student[3] }}
+        </td>
       </tr>
-    </thead>
-    <tbody>
-    {% for student in attendance %}
-    <tr>
-      <td>{{ student[0] }}</td>
-      <td>{{ student[1] }}</td>
-      <td>{{ student[2] }}</td>
-      <td>
-        <input type="checkbox" name="attendanceCheckbox" value="{{ student[0] }}"> Absent
-      </td>
-    </tr>
-  {% endfor %}
-    </tbody>
-  </table>
-  <form id="confirmAttendanceForm" action="{{ url_for('confirm_attendance') }}" method="POST">
-    <input type="hidden" name="class_attend" value="">
+    {% endfor %}
+      </tbody>
+    </table>
+    
+    <input type="hidden" name="action" id="action" value="">
+
+
     <div class="attendance-submit-button">
-      <button type="submit" class="btn-submit" onclick="submitConfirmForm()">
-        Confirm
+      <button name="present-button" type="submit" class="btn-submit" onclick="setAction('present')">
+        Mark as Present
+      </button>
+      <button name="absent-button" type="submit" class="btn-submit" onclick="setAction('absent')">
+        Mark as Absent
       </button>
     </div>
-  </form>
-  <script>
-    function submitForm() {
-      var selectedClass = document.getElementById('inputClasses').value;
-      document.querySelector('input[name="class_attend_hidden"]').value = selectedClass;
-      document.getElementById('attendanceForm').submit();
-    }
-  
-    function submitConfirmForm() {
-      var selectedClass = document.getElementById('inputClasses').value;
-      document.querySelector('input[name="class_attend"]').value = selectedClass;
-      document.getElementById('confirmAttendanceForm').submit();
-    }
-  </script>
+   </form>
+
   </div>
   <div class="content-container" data-tab="4">
     <h2 class="mb-0">Others</h2>
@@ -621,5 +649,10 @@
 
 
 <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
+<script>
+  function setAction(action) {
+      document.getElementById('action').value = action;
+  }
+</script>
 
 {% endblock %}

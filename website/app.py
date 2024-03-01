@@ -339,12 +339,16 @@ def change_password():
             cursor.execute('SELECT * FROM account WHERE id = %s', (session['id'],))
             account = cursor.fetchone()
 
-            if account and old_password == account['password']:
+            hash_old_pass = hashlib.md5(old_password.encode('utf-8')).hexdigest()
+
+            if account and hash_old_pass == account['password']:
                 # Validate new password
                 if new_password == confirm_password:
                     if len(new_password) >= 8:
                         # Update password in the database
-                        cursor.execute('UPDATE account SET password = %s WHERE id = %s', (new_password, session['id']))
+                        hash_new_pass = hashlib.md5(new_password.encode('utf-8')).hexdigest()
+
+                        cursor.execute('UPDATE account SET password = %s WHERE id = %s', (hash_new_pass, session['id']))
                         mysql.connection.commit()
                         flash('Password changed successfully!', 'password_success')
 
@@ -492,36 +496,30 @@ def delete_termreport(student_id):
 
 @app.route('/confirm_attendance', methods=['POST'])
 def confirm_attendance():
-    if request.method == 'POST':
-        selected_class = request.form.get('class_attend')
-        attendance_checkboxes = request.form.getlist('attendanceCheckbox')
+    try:
+        if request.method == 'POST':
+            studentid = request.form.get('student_id')
+            selected_class = request.form.get('class')
+            attendance_checkboxes = request.form.getlist('attendanceCheckbox')
+            action = request.form.get('action')  # Getting the value of the clicked button
 
-        if selected_class and attendance_checkboxes:
-            try:
-                # Connect to the database
+            if attendance_checkboxes and selected_class and studentid and action:
                 cur = mysql.connection.cursor()
-
-                # Iterate over attendance checkboxes and update the database
-                for student_id in attendance_checkboxes:
-                    cur.execute("UPDATE studentlistattendance SET status = 'Absent' WHERE class = %s AND student_id = %s", (selected_class, student_id))
-
-                # Commit the changes to the database
+                if action == 'absent':
+                    cur.execute("UPDATE studentlistattendance SET status = 'Absent' WHERE class = %s AND student_id = %s", (selected_class, studentid))
+                    flash('Marked as absent successfully!', 'attendance_success')
+                elif action == 'present':
+                    cur.execute("UPDATE studentlistattendance SET status = 'Present' WHERE class = %s AND student_id = %s", (selected_class, studentid))
+                    flash('Marked as present successfully!', 'attendance_success')
                 mysql.connection.commit()
+            else:
+                flash('Invalid form data!', 'attendance_error')
 
-                # Close the database connection
-                cur.close()
+    except Exception as e:
+        flash(f'Error confirming attendance: {str(e)}', 'attendance_error')
 
-                # Redirect to the teacher page or any other desired page
-                return redirect(url_for('teacher'))
-
-            except Exception as e:
-                # Handle any exceptions (e.g., database errors)
-                print(f"Error: {e}")
-                return "Error processing attendance data"
-
-        else:
-            # Handle invalid form data
-            return "Invalid form data"
+    return redirect(url_for('teacher'))
+        
         
 if __name__ == '__main__':
     app.run(debug=True)

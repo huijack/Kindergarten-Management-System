@@ -197,7 +197,7 @@ def teacher():
     if request.method == 'GET':
         selected_class01 = request.args.get('class_term')
         selected_class02 = request.args.get('class_attend')
-
+      
         classes01 = fetch_distinct_class01()
         classes02 = fetch_distinct_class02()
 
@@ -208,15 +208,16 @@ def teacher():
             cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
             termreport_data = cur.fetchall()
             cur.close()
-        
+            
         attendance_data = []
         if selected_class02:
             cur = mysql.connection.cursor()
             cur.execute("SELECT * FROM studentlistattendance WHERE class = %s", (selected_class02,))
             attendance_data = cur.fetchall()
             cur.close()
+        
 
-        return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01,classes02=classes02, accountname= session['accountname'])        
+        return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01, classes02=classes02,accountname= session['accountname'])        
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -489,16 +490,38 @@ def delete_termreport(student_id):
     
     return redirect(url_for('teacher'))
 
-# @app.route('/attendance', methods=['GET', 'POST'])
-# def attendance():
-#     # Fetch students for initial display
-#     # cur = mysql.connection.cursor()
-#     # cur.execute("SELECT * FROM studentlisattendance WHERE class='JS1' ")
-#     # students = cur.fetchall()
-#     # cur.close()
+@app.route('/confirm_attendance', methods=['POST'])
+def confirm_attendance():
+    if request.method == 'POST':
+        selected_class = request.form.get('class_attend')
+        attendance_checkboxes = request.form.getlist('attendanceCheckbox')
 
-#     return render_template('teacher.html', students=students)
+        if selected_class and attendance_checkboxes:
+            try:
+                # Connect to the database
+                cur = mysql.connection.cursor()
 
+                # Iterate over attendance checkboxes and update the database
+                for student_id in attendance_checkboxes:
+                    cur.execute("UPDATE studentlistattendance SET status = 'Absent' WHERE class = %s AND student_id = %s", (selected_class, student_id))
 
+                # Commit the changes to the database
+                mysql.connection.commit()
+
+                # Close the database connection
+                cur.close()
+
+                # Redirect to the teacher page or any other desired page
+                return redirect(url_for('teacher'))
+
+            except Exception as e:
+                # Handle any exceptions (e.g., database errors)
+                print(f"Error: {e}")
+                return "Error processing attendance data"
+
+        else:
+            # Handle invalid form data
+            return "Invalid form data"
+        
 if __name__ == '__main__':
     app.run(debug=True)

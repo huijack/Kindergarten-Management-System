@@ -491,7 +491,8 @@
                 </option>
               {% endfor %}
             </select>
-            <button type="submit" class="class-btn-styling-enter">Enter</button>
+            <button type="submit" class="class-btn-styling-enter" onclick="submitForm()">Enter</button>
+            <input type="hidden" name="class_attend_hidden" id="selectedClassInput" value="">
           </div>
         </div>
       </div>
@@ -518,11 +519,27 @@
   {% endfor %}
     </tbody>
   </table>
-  <div class="attendance-submit-button">
-    <button type="submit" class="btn-submit" name="confirm_attendance_button">
-      Confirm
-    </button>
-  </div>
+  <form id="confirmAttendanceForm" action="{{ url_for('confirm_attendance') }}" method="POST">
+    <input type="hidden" name="class_attend" value="">
+    <div class="attendance-submit-button">
+      <button type="submit" class="btn-submit" onclick="submitConfirmForm()">
+        Confirm
+      </button>
+    </div>
+  </form>
+  <script>
+    function submitForm() {
+      var selectedClass = document.getElementById('inputClasses').value;
+      document.querySelector('input[name="class_attend_hidden"]').value = selectedClass;
+      document.getElementById('attendanceForm').submit();
+    }
+  
+    function submitConfirmForm() {
+      var selectedClass = document.getElementById('inputClasses').value;
+      document.querySelector('input[name="class_attend"]').value = selectedClass;
+      document.getElementById('confirmAttendanceForm').submit();
+    }
+  </script>
   </div>
   <div class="content-container" data-tab="4">
     <h2 class="mb-0">Others</h2>

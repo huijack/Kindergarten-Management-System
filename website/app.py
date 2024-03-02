@@ -197,6 +197,7 @@ def teacher():
     if request.method == 'GET':
         selected_class01 = request.args.get('class_term')
         selected_class02 = request.args.get('class_attend')
+        teacher_profile = fetch_data('teacher_profile')
       
         classes01 = fetch_distinct_class01()
         classes02 = fetch_distinct_class02()
@@ -217,7 +218,7 @@ def teacher():
             cur.close()
         
 
-        return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01, classes02=classes02,accountname= session['accountname'])        
+        return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01, classes02=classes02,accountname= session['accountname'], teacher_profile=teacher_profile)        
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -236,6 +237,7 @@ def login():
             session["loggedin"] = True
             session['id'] = account['id']
             session['accountname'] = account['accountname']
+            session['type'] = account['type']
 
             if account['type'] == 'Admin':
                 return redirect(url_for('admin'))
@@ -522,8 +524,46 @@ def confirm_attendance():
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
+    teacher_profile = fetch_data('teacher_profile')
+    account_id = session['id']
+    
+    try:
+
+        if request.method == 'POST':
+            teacher_id = request.form.get('teacher_id')
+            teacher_name = request.form.get('teacher_name')
+            nric = request.form.get('NRIC')
+            contact = request.form.get('contact')
+            department = request.form.get('department')
+            qualification = request.form.get('qualification')
+            experience = request.form.get('experience')
+            bio = request.form.get('bio')
+
+            for teacher in teacher_profile:
+                if teacher[0] == account_id:
+                    cur = mysql.connection.cursor()
+                    cur.execute("""
+                            UPDATE teacher_profile SET name=%s, nric=%s, contact=%s, department=%s, qualification=%s, experience=%s, bio=%s
+                            WHERE id=%s
+                            """, (teacher_name, nric, contact, department, qualification, experience, bio, teacher_id))
+                    mysql.connection.commit()
+                    flash('Teacher profile updated successfully!', 'profile_success')
+                    return redirect(url_for('teacher'))
+            flash('You are not authorized to update this profile.', 'profile_error')
+            return redirect(url_for('teacher'))
+
+    except Exception as e:
+        flash(f'Error updating profile: {str(e)}', 'profile_error')
+    
+    return redirect(url_for('teacher'))
+        
+
+@app.route('/add_teacherprofile', methods=['POST'])
+def add_teacherprofile():
     try:
         if request.method == 'POST':
+            teacher_id = request.form.get('teacher_id')
+            account_type = request.form.get('account_type')
             teacher_name = request.form.get('teacher_name')
             nric = request.form.get('NRIC')
             contact = request.form.get('contact')
@@ -534,17 +574,17 @@ def update_profile():
 
             cur = mysql.connection.cursor()
             cur.execute("""
-                    UPDATE teacher_profile SET nric=%s, contact=%s, department=%s, qualification=%s, experience=%s, bio=%s
-                    WHERE name=%s
-                    """, (nric, contact, department, qualification, experience, bio, teacher_name))
+                INSERT INTO teacher_profile (id, type, name, nric, contact, department, qualification, experience, bio)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (teacher_id, account_type, teacher_name, nric, contact, department, qualification, experience, bio))
             mysql.connection.commit()
-            flash('Profile updated successfully!', 'profile_success')
+            flash('Teacher profile added successfully!', 'teacherprofile_success')
+            return redirect(url_for('teacher'))
 
     except Exception as e:
-        flash(f'Error updating profile: {str(e)}', 'profile_error')
-    
+        flash(f'Error adding teacher profile: {str(e)}', 'teacherprofile_error')
+
     return redirect(url_for('teacher'))
-        
-        
+
 if __name__ == '__main__':
     app.run(debug=True)

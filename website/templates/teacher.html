@@ -52,7 +52,7 @@
             <div class="list-icon">
               <i class="fa-solid fa-pen-to-square"></i>
             </div>
-            <div class="list-text">Update Profile</div>
+            <div class="list-text">Teacher Profile</div>
           </li>
         </button>
         <a class="menu-link logout-class" href="{{ url_for('logout') }}">
@@ -641,7 +641,7 @@
     </div>
   </div>
   <div class="content-container" data-tab="5">
-    <h2>Update Profile</h2>
+    <h2>Teacher Profile</h2>
     <div class="horizontal-line-blue"></div>
     
      <!-- Profile Success Alert Message -->
@@ -672,59 +672,186 @@
       </div>
       {% endfor %} {% endif %} {% endwith %}
 
-    <form action="{{ url_for('update_profile' )}}" method="POST">
-      <div class="form-row">
-        <div class="form-group custom-col-update-profile">
-          <label for="inputTeacherName"><b>Name:</b></label>
-          <input type="text" id="inputTeacherName" name="teacher_name" class="form-control form-outline" required>
-        </div>
+      {% with messages = get_flashed_messages(category_filter=['teacherprofile_success']) %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert-outer-container">
+            <div class="alert alert-success alert-dismissable alert-container" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-        <div class="form-group custom-col-update-profile" style="margin-left: 60px;">
-          <label for="inputNRIC"><b>NRIC / Passport No:</b></label>
-          <input type="text" id="inputNRIC" name="NRIC" class="form-control form-outline" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group custom-col-update-profile">
-          <label for="inputContact"><b>Contact No:</b></label>
-          <input type="text" id="inputContact" name="contact" class="form-control form-outline" required>
-        </div>
-
-        <div class="form-group custom-col-update-profile" style="margin-left: 60px;">
-          <label for="inputDepartment"><b>Department:</b></label>
-          <select id="inputDepartment" name="department" class="form-control form-outline" required>
-            <option selected>English Department</option>
-            <option>Chinese Department</option>
-            <option>Malay Department</option>
-            <option>Mathematics Department</option>
-          </select>
+    {% with messages =
+      get_flashed_messages(category_filter=['teacherprofile_error']) %} {% if messages
+      %} {% for message in messages %}
+      <div class="alert-outer-container">
+        <div class="alert alert-danger alert-dismissable alert-container" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
       </div>
+      {% endfor %} {% endif %} {% endwith %}
 
-      <div class="form-row">
-        <div class="form-group custom-col-update-profile">
-          <label for="inputQuali"><b>Highest Educational Qualifications:</b></label>
-          <input type="text" id="inputQuali" name="qualification" class="form-control form-outline" required>
-        </div>
-
-        <div class="form-group custom-col-update-profile" style="margin-left: 60px;">
-          <label for="inputYears"><b>Years of Teaching Experience:</b></label>
-          <input type="number" id="inputYears" name="experience" class="form-control form-outline" required>
-        </div>
+      
+      <div class="add-profile-button-container">
+        <button type="button" class="btn-toggle-modal" data-toggle="modal" data-target="#modalAddTeacherProfile">Add Profile</button>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-12">
-          <label for="inputBio"><b>Personal Bio:</b></label>
-          <textarea id="inputBio" name="bio" class="form-control custom-full-width" rows="5" required></textarea>
+      <form class="update-profile" action="{{ url_for('update_profile' )}}" method="POST">
+          {% for teacher in teacher_profile %}
+            {% if teacher[0] == session['id'] %}
+              {% set has_profile = false %}
+
+              <input type="hidden" class="teacher_id" name="teacher_id" value="{{ teacher[0] }}">
+
+              <div class="form-row align-teacherprofile-row">
+                <div class="form-group custom-col-update-profile">
+                  <label for="inputTeacherName"><b>Name:</b></label>
+                  <input type="text" id="inputTeacherName" name="teacher_name" class="form-control form-outline" value="{{ teacher[2] }}" required>
+                </div>
+      
+                <div class="form-group custom-col-update-profile">
+                  <label for="inputNRIC"><b>NRIC / Passport No:</b></label>
+                  <input type="text" id="inputNRIC" name="NRIC" class="form-control form-outline" value="{{ teacher[3] }}" required>
+                </div>
+              </div>
+              <div class="form-row align-teacherprofile-row">
+                <div class="form-group custom-col-update-profile">
+                  <label for="inputContact"><b>Contact No:</b></label>
+                  <input type="text" id="inputContact" name="contact" class="form-control form-outline" value="{{ teacher[4] }}" required>
+                </div>
+      
+                <div class="form-group custom-col-update-profile">
+                  <label for="inputDepartment"><b>Department:</b></label>
+                  <select id="inputDepartment" name="department" class="form-control form-outline" required>
+                    <option disabled>Choose...</option>
+                    <option value="English Department" {% if teacher[5]=="English Department" %} selected {% endif %}>English Department</option>
+                    <option value="Chinese Department" {% if teacher[5]=="Chinese Department" %} selected {% endif %}>Chinese Department</option>
+                    <option value="Malay Department" {% if teacher[5]=="Malay Department" %} selected {% endif %}>Malay Department</option>
+                    <option value="Mathematics Department" {% if teacher[5]=="Mathematics Department"%} selected {% endif %}>Mathematics Department</option>
+                  </select>
+                </div>
+              </div>
+      
+              <div class="form-row align-teacherprofile-row">
+                <div class="form-group custom-col-update-profile">
+                  <label for="inputQuali"><b>Highest Educational Qualifications:</b></label>
+                  <select name="qualification" id="inputQuali" class="form-control form-outline" required>
+                    <option disabled>Choose...</option>
+                    <option value="SPM" {% if teacher[6]=="SPM" %} selected {% endif %}>SPM</option>
+                    <option value="STPM" {% if teacher[6]=="STPM" %} selected {% endif %}>STPM</option>
+                    <option value="Diploma" {% if teacher[6]=="Diploma" %} selected {% endif %}>Diploma</option>
+                    <option value="Degree" {% if teacher[6]=="Degree" %} selected {% endif %}>Degree</option>
+                    <option value="Master" {% if teacher[6]=="Master" %} selected {% endif %}>Master</option>
+                    <option value="PhD" {% if teacher[6]=="PhD" %} selected {% endif %}>PhD</option>
+                  </select>
+                </div>
+      
+                <div class="form-group custom-col-update-profile">
+                  <label for="inputYears"><b>Years of Teaching Experience:</b></label>
+                  <input type="number" id="inputYears" name="experience" class="form-control form-outline" value="{{ teacher[7] }}" required>
+                </div>
+              </div>
+      
+              <div class="form-row align-teacherprofile-row">
+                <div class="form-group col-md-12">
+                  <label for="inputBio"><b>Personal Bio:</b></label>
+                  <input id="inputBio" name="bio" class="form-control custom-full-width" value="{{ teacher[8]}}" required></textarea>
+                </div>
+              </div>
+
+              <div class="teacher-profile-button-container">
+                  <div class="update-profile-button-container">
+                    <button type="reset" class="btn btn-discard-changes">Discard Changes</button>
+                    <button type="submit" class="btn btn-save-changes">Update Profile</button>
+                  </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+      </form>
+      
+      <!-- Add Teacher Profile -->
+      <div class="modal fade" id="modalAddTeacherProfile" tabindex="-1" role="dialog" aria-labelledby="myAddTeacherProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabelAddTeacherProfile">
+                Add Teacher Profile
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{{ url_for('add_teacherprofile' )}}" method="POST">
+                <input type="hidden" class="form-control" value="{{ session['id'] }}" name="teacher_id" />
+                <input type="hidden" class="form-control" value="{{ session['type'] }}" name="account_type" />
+                <div class="row">
+                  <div class="form-group col-md-6 mb-3">
+                    <label for="inputTeacherName">Name:</label>
+                    <input type="text" class="form-control" id="inputTeacherName" name="teacher_name" required />
+                  </div>
+                  <div class="form-group col-md-6 mb-3">
+                    <label for="inputNRIC">NRIC / Passport No:</label>
+                    <input type="text" class="form-control" id="inputNRIC" name="NRIC" required />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6 mb-3">
+                    <label for="inputContact">Contact No:</label>
+                    <input type="text" class="form-control" id="inputContact" name="contact" required />
+                  </div>
+                  <div class="form-group col-md-6 mb-3">
+                    <label for="inputDepartment">Department:</label>
+                    <select id="inputDepartment" name="department" class="form-control" required>
+                      <option disabled selected>Choose...</option>
+                      <option value="English Department">English Department</option>
+                      <option value="Chinese Department">Chinese Department</option>
+                      <option value="Malay Department">Malay Department</option>
+                      <option value="Mathematics Department">Mathematics Department</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6 mb-3">
+                    <label for="inputQuali">Highest Educational Qualifications:</label>
+                    <select name="qualification" id="inputQuali" class="form-control" required>
+                      <option disabled selected>Choose...</option>
+                      <option value="SPM">SPM</option>
+                      <option value="STPM">STPM</option>
+                      <option value="Diploma">Diploma</option>
+                      <option value="Degree">Degree</option>
+                      <option value="Master">Master</option>
+                      <option value="PhD">PhD</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6 mb-3">
+                    <label for="inputYears">Years of Teaching Experience:</label>
+                    <input type="number" class="form-control" id="inputYears" name="experience" required />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="inputBio">Personal Bio:</label>
+                    <input id="inputBio" name="bio" class="form-control" required></textarea>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-discard-changes" data-dismiss="modal">Discard Changes</button>
+                <button type="submit" class="btn btn-save-changes">Save changes</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-
-      <button type="reset" class="btn btn-discard-changes">Discard Changes</button>
-      <button type="submit" class="btn btn-save-changes">Save changes</button>
-    </form>
-  </div>
-
+  </div> 
 </div>
 
 
@@ -733,6 +860,17 @@
   function setAction(action) {
       document.getElementById('action').value = action;
   }
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const addProfileButton = document.querySelector('.add-profile-button-container');
+    const updateProfileForm = document.querySelector('.update-profile');
+
+    if (updateProfileForm && updateProfileForm.querySelector('.teacher_id')) {
+      addProfileButton.style.display = 'none';
+    }
+  });
 </script>
 
 {% endblock %}

@@ -660,3 +660,13 @@ body {
   gap: 10px;
 }
 
+.custom-col-update-profile {
+  width: 40%;
+}
+
+.custom-full-width {
+  width: 85%;
+  margin-bottom: 10px; /* Optional: Add margin for spacing between rows */
+  border: 2px solid #1373b9;
+  border-radius: 8px;
+}

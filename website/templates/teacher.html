@@ -642,7 +642,87 @@
   </div>
   <div class="content-container" data-tab="5">
     <h2>Update Profile</h2>
-    <p>Update Profile</p>
+    <div class="horizontal-line-blue"></div>
+    
+     <!-- Profile Success Alert Message -->
+     {% with messages =
+      get_flashed_messages(category_filter=['profile_success']) %} {% if
+      messages %} {% for message in messages %}
+      <div class="alert-outer-container">
+        <div class="alert alert-success alert-dismissable alert-container" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+  
+      <!-- Profile Error Alert Message -->
+      {% with messages =
+      get_flashed_messages(category_filter=['profile_error']) %} {% if messages
+      %} {% for message in messages %}
+      <div class="alert-outer-container">
+        <div class="alert alert-danger alert-dismissable alert-container" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+    <form action="{{ url_for('update_profile' )}}" method="POST">
+      <div class="form-row">
+        <div class="form-group custom-col-update-profile">
+          <label for="inputTeacherName"><b>Name:</b></label>
+          <input type="text" id="inputTeacherName" name="teacher_name" class="form-control form-outline" required>
+        </div>
+
+        <div class="form-group custom-col-update-profile" style="margin-left: 60px;">
+          <label for="inputNRIC"><b>NRIC / Passport No:</b></label>
+          <input type="text" id="inputNRIC" name="NRIC" class="form-control form-outline" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group custom-col-update-profile">
+          <label for="inputContact"><b>Contact No:</b></label>
+          <input type="text" id="inputContact" name="contact" class="form-control form-outline" required>
+        </div>
+
+        <div class="form-group custom-col-update-profile" style="margin-left: 60px;">
+          <label for="inputDepartment"><b>Department:</b></label>
+          <select id="inputDepartment" name="department" class="form-control form-outline" required>
+            <option selected>English Department</option>
+            <option>Chinese Department</option>
+            <option>Malay Department</option>
+            <option>Mathematics Department</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group custom-col-update-profile">
+          <label for="inputQuali"><b>Highest Educational Qualifications:</b></label>
+          <input type="text" id="inputQuali" name="qualification" class="form-control form-outline" required>
+        </div>
+
+        <div class="form-group custom-col-update-profile" style="margin-left: 60px;">
+          <label for="inputYears"><b>Years of Teaching Experience:</b></label>
+          <input type="number" id="inputYears" name="experience" class="form-control form-outline" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="inputBio"><b>Personal Bio:</b></label>
+          <textarea id="inputBio" name="bio" class="form-control custom-full-width" rows="5" required></textarea>
+        </div>
+      </div>
+
+      <button type="reset" class="btn btn-discard-changes">Discard Changes</button>
+      <button type="submit" class="btn btn-save-changes">Save changes</button>
+    </form>
   </div>
 
 </div>

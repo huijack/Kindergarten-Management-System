@@ -519,6 +519,31 @@ def confirm_attendance():
         flash(f'Error confirming attendance: {str(e)}', 'attendance_error')
 
     return redirect(url_for('teacher'))
+
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    try:
+        if request.method == 'POST':
+            teacher_name = request.form.get('teacher_name')
+            nric = request.form.get('NRIC')
+            contact = request.form.get('contact')
+            department = request.form.get('department')
+            qualification = request.form.get('qualification')
+            experience = request.form.get('experience')
+            bio = request.form.get('bio')
+
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                    UPDATE teacher_profile SET nric=%s, contact=%s, department=%s, qualification=%s, experience=%s, bio=%s
+                    WHERE name=%s
+                    """, (nric, contact, department, qualification, experience, bio, teacher_name))
+            mysql.connection.commit()
+            flash('Profile updated successfully!', 'profile_success')
+
+    except Exception as e:
+        flash(f'Error updating profile: {str(e)}', 'profile_error')
+    
+    return redirect(url_for('teacher'))
         
         
 if __name__ == '__main__':

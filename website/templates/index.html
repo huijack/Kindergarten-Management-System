@@ -627,17 +627,7 @@
     <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
     <script src="{{ url_for('static', filename='js/triggerupload.js') }}"></script>
     <script src="{{ url_for('static', filename='js/studentprofileclass.js') }}"></script>
-    <script>
-        setInterval(function() {
-            var date = new Date();
-            var dateNow = date.toLocaleDateString("en-GB", { day: '2-digit', month: '2-digit', year: 'numeric' }) + " " + date.toLocaleTimeString();
-            var elements = document.querySelectorAll(".date-now");
+    <script src="{{ url_for('static', filename='js/date.js') }}"></script>
 
-                elements.forEach(function(element) {
-                element.innerHTML = dateNow;
-            });
-        }, 1000);
-
-    </script>
 
 {% endblock %}

@@ -44,24 +44,27 @@ def start():
 
 @app.route('/admin')
 def admin():
-    selected_class = request.args.get('class')
+    if 'loggedin' not in session:
+        return redirect(url_for('login'))
+    else:
+        selected_class = request.args.get('class')
 
-    classes = fetch_distinct_class()
-    employees_data = fetch_data('employees')
-    studentlistattendance_data = fetch_data('studentlistattendance')
-    
-    studentprofile_data = []
-    if selected_class:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM studentprofile WHERE class = %s", (selected_class,))
-        studentprofile_data = cur.fetchall()
-        cur.close()
+        classes = fetch_distinct_class()
+        employees_data = fetch_data('employees')
+        studentlistattendance_data = fetch_data('studentlistattendance')
+        
+        studentprofile_data = []
+        if selected_class:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM studentprofile WHERE class = %s", (selected_class,))
+            studentprofile_data = cur.fetchall()
+            cur.close()
 
-    # Get the list of generated CSV filenames (adjust the path accordingly)
-    csv_folder_path = 'uploads'
-    filenames = [f for f in os.listdir(csv_folder_path) if f.endswith('.csv')]
+        # Get the list of generated CSV filenames (adjust the path accordingly)
+        csv_folder_path = 'uploads'
+        filenames = [f for f in os.listdir(csv_folder_path) if f.endswith('.csv')]
 
-    return render_template('index.html', classes=classes, employees=employees_data, studentlistattendance=studentlistattendance_data, studentprofile=studentprofile_data, filenames=filenames, accountname=session['accountname'], selected_class=selected_class)
+        return render_template('index.html', classes=classes, employees=employees_data, studentlistattendance=studentlistattendance_data, studentprofile=studentprofile_data, filenames=filenames, accountname=session['accountname'], selected_class=selected_class)
 
 
 @app.route('/uploadcsv', methods=['POST'])
@@ -194,31 +197,34 @@ def fetch_distinct_class02():
 
 @app.route('/teacher')
 def teacher():
-    if request.method == 'GET':
-        selected_class01 = request.args.get('class_term')
-        selected_class02 = request.args.get('class_attend')
-        teacher_profile = fetch_data('teacher_profile')
-      
-        classes01 = fetch_distinct_class01()
-        classes02 = fetch_distinct_class02()
-
-
-        termreport_data = []
-        if selected_class01:
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
-            termreport_data = cur.fetchall()
-            cur.close()
-            
-        attendance_data = []
-        if selected_class02:
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM studentlistattendance WHERE class = %s", (selected_class02,))
-            attendance_data = cur.fetchall()
-            cur.close()
+    if 'loggedin' not in session:
+        return redirect(url_for('login'))
+    else:
+        if request.method == 'GET':
+            selected_class01 = request.args.get('class_term')
+            selected_class02 = request.args.get('class_attend')
+            teacher_profile = fetch_data('teacher_profile')
         
+            classes01 = fetch_distinct_class01()
+            classes02 = fetch_distinct_class02()
 
-        return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01, classes02=classes02,accountname= session['accountname'], teacher_profile=teacher_profile)        
+
+            termreport_data = []
+            if selected_class01:
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM termreport WHERE class = %s", (selected_class01,))
+                termreport_data = cur.fetchall()
+                cur.close()
+                
+            attendance_data = []
+            if selected_class02:
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM studentlistattendance WHERE class = %s", (selected_class02,))
+                attendance_data = cur.fetchall()
+                cur.close()
+            
+
+            return render_template('teacher.html', termreport=termreport_data, attendance=attendance_data, classes01=classes01, classes02=classes02,accountname= session['accountname'], teacher_profile=teacher_profile)        
 
 
 @app.route('/login', methods=['GET', 'POST'])

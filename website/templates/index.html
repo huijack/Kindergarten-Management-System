@@ -76,7 +76,14 @@
             </div>
         </div>
         <div class="content-container" data-tab="1">
-            <h2 class="mb-0">Employee</h2>
+            <div class="title-and-date">
+                <div class="title">
+                    <h2 class="mb-0">Employee</h2>
+                </div>
+                <div class="date">
+                    <h2 class="mb-0 date-now"></h2>
+                </div>
+            </div>
 
             <div class="horizontal-line-blue">
             </div>
@@ -283,7 +290,14 @@
             </table>
         </div>
         <div class="content-container" data-tab="2">
-            <h2 class="mb-0">Student List</h2>
+            <div class="title-and-date">
+                <div class="title">
+                    <h2 class="mb-0">Student List</h2>
+                </div>
+                <div class="date">
+                    <h2 class="mb-0 date-now"></h2>
+                </div>
+            </div>
 
             <div class="horizontal-line-blue">
             </div>
@@ -361,7 +375,14 @@
 
         </div>
         <div class="content-container" data-tab="3">
-            <h2 class="mb-0">Student Profile</h2>
+            <div class="title-and-date">
+                <div class="title">
+                    <h2 class="mb-0">Student Profile</h2>
+                </div>
+                <div class="date">
+                    <h2 class="mb-0 date-now"></h2>
+                </div>
+            </div>            
             <div class="horizontal-line-blue"></div>
         
 
@@ -528,8 +549,14 @@
         </div>
         
         <div class="content-container" data-tab="4">
-            <h2 class = "mb-0">Others</h2>
-
+            <div class="title-and-date">
+                <div class="title">
+                    <h2 class="mb-0">Others</h2>
+                </div>
+                <div class="date">
+                    <h2 class="mb-0 date-now"></h2>
+                </div>
+            </div>
             <div class="horizontal-line-blue">
             </div>
 
@@ -600,5 +627,17 @@
     <script src="{{ url_for('static', filename='js/hideshow.js') }}"></script>
     <script src="{{ url_for('static', filename='js/triggerupload.js') }}"></script>
     <script src="{{ url_for('static', filename='js/studentprofileclass.js') }}"></script>
+    <script>
+        setInterval(function() {
+            var date = new Date();
+            var dateNow = date.toLocaleDateString("en-GB", { day: '2-digit', month: '2-digit', year: 'numeric' }) + " " + date.toLocaleTimeString();
+            var elements = document.querySelectorAll(".date-now");
+
+                elements.forEach(function(element) {
+                element.innerHTML = dateNow;
+            });
+        }, 1000);
+
+    </script>
 
 {% endblock %}

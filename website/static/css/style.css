@@ -494,8 +494,7 @@ body {
 
 .alert-message-container {
   display: flex;
-  justify-content: flex-end;
-  background-color: #1373b9;
+  justify-content: center;
 }
 
 .change-password-text {
@@ -686,4 +685,24 @@ body {
 .add-profile-button-container {
   display: flex;
   margin-bottom: 15px;
+}
+
+.title-and-date {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.title {
+  width: 50%;
+}
+
+.date {
+  width: 50%;
+  display: flex;
+  justify-content: end;
+}
+
+.alert-login {
+  margin: 10px 0;
 }

@@ -451,7 +451,7 @@ body {
 .submit-container {
   display: flex;
   justify-content: flex-end;
-  width: 50%;
+  width: 100%;
 }
 
 .role-text {
@@ -705,4 +705,13 @@ body {
 
 .alert-login {
   margin: 10px 0;
+}
+
+.reset-password-text {
+  color: #fff;
+  font-weight: 600;
+}
+
+.reset-password-text p {
+  margin-bottom: 0;
 }

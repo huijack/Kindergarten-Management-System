@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, send_from_directory, Response, url_for, session
 from flask_mysqldb import MySQL
+from flask_mail import Mail, Message
+from uuid import uuid4
 import MySQLdb.cursors
 import MySQLdb.cursors, re, hashlib
 import pandas as pd
@@ -9,10 +11,18 @@ import ast
 from io import StringIO
 
 
-
 app = Flask(__name__, template_folder='templates', static_url_path='/static')
 
 app.secret_key = 'ching chong ding dong'
+
+# Mail configurations
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'jacklim2626@gmail.com'
+app.config['MAIL_PASSWORD'] = 'snjaavjmnrnwdnny'
+app.config['MAIL_DEFAULT_SENDER'] = 'jacklim2626@gmail.com'
+
 
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
@@ -20,6 +30,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'kindergarten_system'
 
+mail = Mail(app)
 mysql = MySQL(app)
 
 def fetch_distinct_class():
@@ -36,7 +47,8 @@ def fetch_data(table_name):
     data = cur.fetchall()
     cur.close()
     return data
-    
+
+
 @app.route('/')
 def start():
     return render_template('login.html')
@@ -268,17 +280,23 @@ def logout():
 def register():
     msg = ""
 
-    if request.method == 'POST' and 'accountname' in request.form and 'password' in request.form and 'role_type' in request.form:
+    if request.method == 'POST' and 'accountname' in request.form and 'email' in request.form and 'password' in request.form and 'role_type' in request.form:
         accountname = request.form['accountname']
+        email = request.form['email']
         password = request.form['password']
         role_type = request.form['role_type']
 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM account WHERE accountname = %s', (accountname,))
         account = cursor.fetchone()
+        cursor.execute('SELECT * FROM account WHERE email = %s', (email,))
+        email_db = cursor.fetchone()
     
         if account:
             msg = 'Account already exists!'
+
+        elif email_db:
+            msg = 'Email already exists!'
         
         # Check if password length is at least 8 characters
         elif len(password) < 8:
@@ -288,19 +306,73 @@ def register():
         elif role_type == '':
             msg = 'Please select a role type!'
 
-        elif not accountname or not password or not role_type:
-            msg = 'Please fill out the details!'
-
         else:
             hash_pass = hashlib.md5(password.encode('utf-8')).hexdigest()
 
-            cursor.execute('INSERT INTO account (accountname, password, type) VALUES (%s, %s, %s)', (accountname, hash_pass, role_type))
+            cursor.execute('INSERT INTO account (accountname, email, password, type) VALUES (%s, %s, %s, %s)', (accountname, email, hash_pass, role_type))
             mysql.connection.commit()
             flash('Your account is successfully registered!', 'register_success')
             return redirect(url_for('login'))
 
     return render_template('register.html', msg=msg)
 
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form['email']
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM account WHERE email = %s', (email,))
+        user = cursor.fetchone()
+
+        if user:
+            reset_token = uuid4()
+
+            cursor.execute('UPDATE account SET reset_token = %s WHERE email = %s', (reset_token, email))
+            mysql.connection.commit()
+
+            reset_link = url_for('reset_password', token=reset_token, _external=True)
+            msg = Message('Password Reset Request', recipients=[email])
+            msg.body = f"To reset your password, visit the following link: {reset_link}"
+            mail.send(msg)
+            flash('An email with instructions to reset your password has been sent to your email address.', 'email_success')
+        else:
+            flash('Email address not found. Please make sure you entered the correct email.', 'email_error')
+
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if request.method == 'POST':
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        if new_password != confirm_password:
+            flash('Passwords do not match!', 'error')
+            return redirect(url_for('reset_password', token=token))
+
+        # Hash the new password
+        hashed_password = hashlib.md5(new_password.encode('utf-8')).hexdigest()
+
+        # Update the user's password in the database
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE account SET password = %s, reset_token = NULL WHERE reset_token = %s', (hashed_password, token))
+        mysql.connection.commit()
+
+        flash('Password reset successful!', 'reset_success')
+        return redirect(url_for('login'))
+
+        # Verify the reset token
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM account WHERE reset_token = %s', (token,))
+        user = cursor.fetchone()
+
+        if not user:
+            flash('Invalid or expired reset token!', 'reset_error')
+            return redirect(url_for('login'))
+
+    return render_template('reset_password.html', token=token)
 
 def insert_assessment(Class, Subject, Assesssment, Name, Marks):
     # Insert assessment data into the database

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, send_from_di
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from uuid import uuid4
+from dotenv import load_dotenv
 import MySQLdb.cursors
 import MySQLdb.cursors, re, hashlib
 import pandas as pd
@@ -10,25 +11,30 @@ import json
 import ast
 from io import StringIO
 
-
 app = Flask(__name__, template_folder='templates', static_url_path='/static')
 
-app.secret_key = 'ching chong ding dong'
+app.secret_key = os.environ.get('SECRET_KEY')
+
+load_dotenv()  # This loads the variables from .env into the environment
 
 # Mail configurations
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'jacklim2626@gmail.com'
-app.config['MAIL_PASSWORD'] = 'snjaavjmnrnwdnny'
-app.config['MAIL_DEFAULT_SENDER'] = 'jacklim2626@gmail.com'
-
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
+app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS')
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
 # MySQL configurations
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'kindergarten_system'
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
+
+print(app.config['MYSQL_HOST'])
+print(app.config['MYSQL_USER'])
+print(app.config['MYSQL_PASSWORD'])
+print(app.config['MYSQL_DB'])
 
 mail = Mail(app)
 mysql = MySQL(app)
